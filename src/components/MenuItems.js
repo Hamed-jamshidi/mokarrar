@@ -1,32 +1,32 @@
 export const MenuItems = [
   {
     title: 'ثبت عملیات جدید',
-    path: '/marketing',
+    path: '/actions',
     cName: 'dropdown-link'
   },
   {
     title: 'ثبت ایستگاه جدید',
-    path: '/consulting',
+    path: '/stations',
     cName: 'dropdown-link'
   },
   {
     title: 'تعریف مدیران و روسا',
-    path: '/design',
+    path: '/users',
     cName: 'dropdown-link'
   },
   {
     title: 'تعریف کاربر یا اپراتور',
-    path: '/development',
+    path: '/users',
     cName: 'dropdown-link',
   },
   {
     title: 'ثبت نام ماده جدید',
-    path: '/development',
+    path: '/products',
     cName: 'dropdown-link',
   },
   {
     title: 'ثبت مشخصه کنترلی جدید',
-    path: '/development',
+    path: '/controllers',
     cName: 'dropdown-link',
   }
 ];
