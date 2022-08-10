@@ -1,0 +1,46 @@
+.title{
+    text-align: center;
+    width:100%;
+    padding:5px;
+    margin:5px;
+    color:black;
+    background:white;
+}
+.titleInput{
+ text-align: center;
+ margin:20px;
+ padding:20px;
+ font-size: 15px;
+ font-weight: bolder;
+ position: initial
+ 
+}
+
+.holder{   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.holderRadio{
+    border:1px burlywood solid;
+    border-radius: 10px;
+    margin: 0px;
+    padding:0px;
+    
+
+}
+.radio{
+    padding:0px 10px;
+    margin-Right:0px 0px;
+}
+
+.select{
+ width: 50%;
+ padding:0;
+ margin:0;
+}
+
+.dataPicker{
+ width: auto;
+}
+ 

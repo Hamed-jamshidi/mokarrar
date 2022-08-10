@@ -45,7 +45,7 @@ function Navbar() {
             onMouseLeave={onMouseLeave}
           >
             <Link
-              to='/services'
+              to='/'
               className='nav-links'
               onClick={closeMobileMenu}
             >
@@ -55,7 +55,7 @@ function Navbar() {
           </li>
 
           <li className='nav-item'>
-            <Link to='/' className='nav-links' onClick={closeMobileMenu}>
+            <Link to='/information' className='nav-links' onClick={closeMobileMenu}>
             ثبت اطلاعات
             </Link>
           </li>

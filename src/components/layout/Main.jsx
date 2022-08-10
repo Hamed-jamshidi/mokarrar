@@ -4,11 +4,12 @@ import ContactUs from '../pages/ContactUs';
 import Home from '../pages/Home';
 import Actions from '../pages/Actions';
 import Products from '../pages/Products';
-import Services from '../pages/Services';
+import Services from '../pages/Information';
 import SignUp from '../pages/SignUp';
 import { ProtectedRoute } from './ProtectedRoute';
 import Stations from '../pages/Stations';
 import Users from '../pages/Users';
+import Information from '../pages/Information';
 
 function Main(){
     return( 
@@ -16,7 +17,7 @@ function Main(){
   <Route element={<ProtectedRoute/>}>
    <Route path='/'  element={<Home/>} />
    <Route path='/controllers'  element={<Home/>} />
-   <Route path='/services' element={<Services/>} />
+   <Route path='/information' element={<Information/>} />
    <Route path='/products' element={<Products/>} />
    <Route path='/contact-us' element={<ContactUs/>} />
    <Route path='/sign-up' element={<SignUp/>} />
