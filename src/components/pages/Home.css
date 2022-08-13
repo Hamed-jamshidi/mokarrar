@@ -22,3 +22,11 @@
   margin: 10px 5px;
   
 }
+.error{
+    border-radius: 10px;
+    border-color: rgb(237, 56, 56);
+    background-color: rgb(216, 131, 131);
+    color:azure;
+    padding :5px 10px;
+    
+}

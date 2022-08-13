@@ -53,7 +53,7 @@ export default function TableComponent({rows ,columns}) {
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>          
-              {columns.map((column , index)=>  <StyledTableCell align="center">{column}</StyledTableCell>)}
+              {columns.map((column , index)=>  <StyledTableCell key={index} align="center">{column}</StyledTableCell>)}
           </TableRow>
         </TableHead>
         <TableBody>
