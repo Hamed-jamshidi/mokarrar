@@ -49,8 +49,8 @@ export default function TableComponent({rows ,columns}) {
   const classes = useStyles();
    
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
+    <TableContainer component={Paper} >
+      <Table className={classes.table} npm aria-label="customized table">
         <TableHead>
           <TableRow>          
               {columns.map((column , index)=>  <StyledTableCell key={index} align="center">{column}</StyledTableCell>)}

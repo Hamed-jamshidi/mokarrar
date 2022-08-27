@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Navigate } from 'react-router'
 import * as yup from 'yup'
-import MyAxios from '../components/myAxios'
+import MyAxios from '../../components/myAxios'
 
 
 export default function RegisterUser() {
