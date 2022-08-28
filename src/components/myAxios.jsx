@@ -4,7 +4,7 @@ export default function MyAxios(url, method = 'get', request_data = {}) {
   // var data = fetch('/constant.json').json()
   // const currentUrl ='url' in data ? data['url'] + url : '/license/api/v1/' + url;
   // console.log('url', currentUrl)
-  const currentUrl = 'http://localhost:3008/api/' + url;
+  const currentUrl = 'http://192.168.20.18:3008/api/' + url;
   // const currentUrl = 'http://192.168.43.227:8000/' + url;
 
   if (localStorage.getItem('token') !== null) {

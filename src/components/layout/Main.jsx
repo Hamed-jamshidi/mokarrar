@@ -12,6 +12,7 @@ import Users from '../pages/Users';
 import Information from '../pages/Information';
 import Controllers from '../pages/Controllers';
 import Home from "../pages/Home"
+import NotFound from '../pages/NotFound';
 
 function Main(){
     return( 
@@ -19,7 +20,7 @@ function Main(){
       <Route path='/signin'  element={<Signup/>} />
       
   <Route element={<ProtectedRoute/>}>
-   <Route path='/'  element={<Home/>} />
+   <Route path='/' exact element={<Home/>} />
    <Route path='/controllers'  element={<Controllers/>} />
    <Route path='/information' element={<Information/>} />
    <Route path='/products' element={<Products/>} />
@@ -30,6 +31,7 @@ function Main(){
    <Route path='/users' element={<Users/>} />
    <Route path='/products' element={<Products/>} />
    <Route path='/register' element={<RegisterUser/>} />
+   <Route path='/*' element={<NotFound/>} />
 
    </Route>
 </Routes>

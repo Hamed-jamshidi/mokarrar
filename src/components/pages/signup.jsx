@@ -2,6 +2,7 @@ import React from "react";
 import MyAxios from "../myAxios";
 import "./Home.css";
 import * as Yup from "yup";
+import { Navigate } from 'react-router-dom';
 import { useFormik } from "formik";
 import {
   Checkbox,
@@ -12,6 +13,7 @@ import {
   Button,
 } from "@material-ui/core";
 const Signup = () => {
+  
   const validationForm = Yup.object().shape({
     username: Yup.string().required("نام کاربری را وارد کنید  "),
     password: Yup.string().required(" رمز عبور را وارد کنید"),
@@ -24,9 +26,11 @@ const Signup = () => {
     validationSchema: validationForm,
     onSubmit:async(values) => {
       const token = await MyAxios("user/login" , "post" , values )
-      .then(console.log('logined'))
+      .then(
+        (response)=>(localStorage.setItem("token", response.data.data.token)) )
+        .then(()=>{return <Navigate to="/products" /> })
       .catch((err)=>err.message);
-      console.log(token)
+      
     },
   });
   const [checked, setChecked] = React.useState(true);
@@ -59,7 +63,7 @@ const Signup = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              type="password"
+              type="text"
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}

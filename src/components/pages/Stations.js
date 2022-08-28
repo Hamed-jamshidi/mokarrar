@@ -13,6 +13,12 @@ import "./Home.css";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 export default function Stations() {
+//   useEffect(()=>{
+//     const getAcions =async()=>{
+//      await MyAxios("" , values )
+//      return;
+//     }
+//  }, [])
   const validationForm = Yup.object().shape({
     stationCode: Yup.string().required("کد ایستگاه را وارد کنید"),
     stationName: Yup.string().required(" نام ایستگاه را وارد کنید"),

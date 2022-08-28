@@ -7,12 +7,23 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TableComponent from "../common/TableComponent";
 import "./Home.css";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import MyAxios from "../myAxios";
 export default function Actions() {
+  const [actionData , setActionData] = useState()
+  useEffect(()=>{
+     const getAcions =async()=>{
+      await MyAxios("missions/allMissions")
+      .then((response)=>setActionData(response.data.data))
+      .catch((error)=>console.log(error.message))
+      return;
+     }
+     getAcions();
+  }, [])
   const validationForm = Yup.object().shape({
     actionCode: Yup.string().required("کد عملیات  را وارد کنید"),
     actionName: Yup.string().required(" نام عملیات را وارد کنید"),
@@ -138,10 +149,7 @@ export default function Actions() {
             <Grid item xs>
               <TableComponent
                 columns={["کد عملیات", "نام عملیات", "ویرایش"]}
-                rows={[
-                  { name: "ششش", code: 11 },
-                  { name: "b", code: 12 },
-                ]}
+                rows={actionData}
               />
             </Grid>
           </Grid>
