@@ -13,17 +13,37 @@ import "./Home.css";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import MyAxios from "../myAxios";
+import { act } from "react-dom/test-utils";
 export default function Actions() {
-  const [actionData , setActionData] = useState()
-  useEffect(()=>{
-     const getAcions =async()=>{
-      await MyAxios("missions/allMissions")
-      .then((response)=>setActionData(response.data.data))
-      .catch((error)=>console.log(error.message))
-      return;
-     }
-     getAcions();
-  }, [])
+  const [actionData, setActionData] = useState([]);
+  function convertRows(rows) {
+    rows.map(({ id, missionCode, missionName }) => {
+      console.log( { id: id, code: missionCode, name: missionName })
+      return { id: id, code: missionCode, name: missionName };
+    });
+  }
+
+  async function getActions() {   
+    await MyAxios("missions/allMissions")
+      .then((response) => {
+        console.log(",,,,,,,,,,,,,,,", response.data.data)
+       const result=  convertRows(response.data.data)
+       console.log(",,,,,,,,,,,,,,,", result)
+        setActionData(result)
+      //  let result = [...response.data.data];
+      //  console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,111",result)
+      //   result = convertRows(result)
+      //   console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,222",result)
+      //   setActionData(result)
+      })
+      .catch((error) => console.log(error.message));
+    return;
+  }
+  useEffect(() => {
+    getActions();
+  
+  }, [actionData]);
+  console.log("action data", actionData);
   const validationForm = Yup.object().shape({
     actionCode: Yup.string().required("کد عملیات  را وارد کنید"),
     actionName: Yup.string().required(" نام عملیات را وارد کنید"),
@@ -139,7 +159,7 @@ export default function Actions() {
                 </div>
               </Grid>
               <Grid item xs style={{}}>
-                <Button  type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="primary">
                   ثبت
                 </Button>
               </Grid>
@@ -147,10 +167,11 @@ export default function Actions() {
           </form>
           <Grid container style={{ textAlign: "center" }}>
             <Grid item xs>
-              <TableComponent
+           
+              {/* <TableComponent
                 columns={["کد عملیات", "نام عملیات", "ویرایش"]}
                 rows={actionData}
-              />
+              /> */}
             </Grid>
           </Grid>
         </Typography>

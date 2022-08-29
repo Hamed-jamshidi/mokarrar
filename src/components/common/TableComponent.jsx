@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
+import { useState } from 'react';
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -45,7 +46,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TableComponent({rows ,columns}) {
+export default function TableComponent({rows,columns}) {
+  const [satr, setSatr] = useState(rows)
+  console.log(rows , columns);
   const classes = useStyles();
    
   return (
@@ -57,10 +60,11 @@ export default function TableComponent({rows ,columns}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {satr.map((row,index) => (
+          
+            <StyledTableRow key={row.id}>
               <StyledTableCell align="center">{row.code }</StyledTableCell>
-              <StyledTableCell align="center">{row.name }</StyledTableCell>  
+              <StyledTableCell align="center">{row.name}</StyledTableCell>  
               { row.manager && <StyledTableCell align="center">{row.manager }</StyledTableCell>}          
               { row.controll && <StyledTableCell align="center">{row.controll }</StyledTableCell>}          
               <StyledTableCell align="center"> 

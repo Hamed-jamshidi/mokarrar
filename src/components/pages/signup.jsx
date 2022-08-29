@@ -3,7 +3,7 @@ import MyAxios from "../myAxios";
 import "./Home.css";
 import * as Yup from "yup";
 import { Navigate } from 'react-router-dom';
-import { useFormik } from "formik";
+import { ErrorMessage, useFormik } from "formik";
 import {
   Checkbox,
   Grid,
@@ -12,8 +12,9 @@ import {
   Paper,
   Button,
 } from "@material-ui/core";
+import { useState } from "react";
 const Signup = () => {
-  
+  const [error , setError] = useState("");
   const validationForm = Yup.object().shape({
     username: Yup.string().required("نام کاربری را وارد کنید  "),
     password: Yup.string().required(" رمز عبور را وارد کنید"),
@@ -25,13 +26,14 @@ const Signup = () => {
     },
     validationSchema: validationForm,
     onSubmit:async(values) => {
-      const token = await MyAxios("user/login" , "post" , values )
-      .then(
-        (response)=>(localStorage.setItem("token", response.data.data.token)) )
-        .then(()=>{return <Navigate to="/products" /> })
-      .catch((err)=>err.message);
-      
-    },
+      await MyAxios("user/login" , "post" , values )
+      .then((response) =>{localStorage.setItem("token" , response.data.data.token);
+      setError ("");
+      window.location.replace('/'); 
+    }).catch((err)=>{console.log(err.message);
+    console.log("login failed!")});
+    setError("login failed!")
+   },
   });
   const [checked, setChecked] = React.useState(true);
 
@@ -86,6 +88,7 @@ const Signup = () => {
             />
           </Grid>
           <Grid item xs={12}>
+            {error !== "" && <h1>{error}</h1>} 
             <Button type="submit" variant="contained" color="primary">
               ورود
             </Button>

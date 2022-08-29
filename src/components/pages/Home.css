@@ -55,9 +55,7 @@
     cursor: pointer;
 }
 .notfound{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    text-align: center;
     width: 100%;
     height: 100vh;
     background-color:rgb(33, 114, 161);

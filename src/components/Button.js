@@ -6,10 +6,11 @@ export function Button() {
   const [login ,setLogin] = useState(false);
   const token = localStorage.getItem("token")
   const handleClickSigin = ()=>{
-    if(token) localStorage.removeItem("token");}
- 
+    if(token) {
+      localStorage.removeItem("token");}}
+      // window.location.reload()
   return (
-    <Link to='/'>
+    <Link to='/signin'>
       <button onClick={handleClickSigin} className='btn'>{ token? "خروج" : "ورود"} </button>
     </Link>
   );
