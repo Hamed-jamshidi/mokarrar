@@ -11,51 +11,98 @@ import React, { useEffect, useState } from "react";
 import TableComponent from "../common/TableComponent";
 import "./Home.css";
 import * as Yup from "yup";
-import { useFormik } from "formik";
+import { setIn, useFormik } from "formik";
 import MyAxios from "../myAxios";
-import { act } from "react-dom/test-utils";
+import ShowAlert from "../common/ShowAlert";
+import Alert from "@material-ui/lab/Alert";
 export default function Actions() {
   const [actionData, setActionData] = useState([]);
-  function convertRows(rows) {
-    rows.map(({ id, missionCode, missionName }) => {
-      console.log( { id: id, code: missionCode, name: missionName })
-      return { id: id, code: missionCode, name: missionName };
-    });
+  const [Id , setId] = useState('');
+  const [err , setErr]= useState('');
+  const [sucessMessage , setSuccessMessage]= useState('')
+  //send the field for set in table 
+  const submitActoins=async(valuse)=>{
+    await MyAxios("missions/newMission" , 'post' , valuse)
+    .then((response)=>{
+      if(response.data.success){
+        getActions();
+        formik.values.missionCode="";
+        formik.values.missionName="";        
+        setErr("");
+        setSuccessMessage("این عملیات با موفقیت انجام شد")
+      
+      }
+      else setErr("این کد عملیات قبلا وجود داشته است")
+    })
+    .catch((error)=>console.log(error))
+ 
+  }
+ 
+  //delete the row of table or an action
+  const deleteHandler=async(id)=>{
+  await MyAxios(`missions/deleteMissions/${id}`)
+  .then((response)=>getActions())
+  .catch((error)=>console.log(error.message))
   }
 
+  //get an action from table
+  const handleEdit=(event,row)=>{
+    event.preventDefault();
+    console.log("handle edit ,,,,,,,,,,,,,,,,,,,,",row)
+    setId(row.id)
+   formik.values.missionCode=row.missionCode;
+   formik.values.missionName=row.missionName;   
+  }
+ 
+  //  Edit the row of table or an action
+  const handleClickEdit=async(event)=>{
+     event.preventDefault();
+     const updatedValue={
+      id:Id,
+      missionCode: formik.values.missionCode,
+      missionName:`'${formik.values.missionName}'`
+     }
+     console.log("handle edit click ......",updatedValue)
+     await MyAxios(`missions/updateMission`, "post" ,updatedValue)
+     .then((response)=>{
+      getActions();
+      formik.values.missionCode="";
+    formik.values.missionName="";
+    setId("");})
+     .catch((error)=>console.log(error.message))
+
+  }
+
+
+  
+  //get all actions 
   async function getActions() {   
     await MyAxios("missions/allMissions")
       .then((response) => {
-        console.log(",,,,,,,,,,,,,,,", response.data.data)
-       const result=  convertRows(response.data.data)
-       console.log(",,,,,,,,,,,,,,,", result)
-        setActionData(result)
-      //  let result = [...response.data.data];
-      //  console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,111",result)
-      //   result = convertRows(result)
-      //   console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,222",result)
-      //   setActionData(result)
+        setActionData(response.data.data);    
       })
       .catch((error) => console.log(error.message));
     return;
   }
   useEffect(() => {
     getActions();
-  
-  }, [actionData]);
+   
+  }, []);
+
   console.log("action data", actionData);
   const validationForm = Yup.object().shape({
-    actionCode: Yup.string().required("کد عملیات  را وارد کنید"),
-    actionName: Yup.string().required(" نام عملیات را وارد کنید"),
+    missionCode: Yup.string().required("کد عملیات  را وارد کنید"),
+    missionName: Yup.string().required(" نام عملیات را وارد کنید"),
   });
   const formik = useFormik({
     initialValues: {
-      actionCode: "",
-      actionName: "",
+      missionCode:  "",
+      missionName:"",
     },
     validationSchema: validationForm,
     onSubmit: (values) => {
-      console.log(values);
+     
+      submitActoins(values)
     },
   });
   return (
@@ -68,6 +115,8 @@ export default function Actions() {
         >
           <form onSubmit={formik.handleSubmit} className="formContainer">
             <Grid container style={{ textAlign: "center" }}>
+              {sucessMessage && setInterval(()=>{return <Alert severity="success">{sucessMessage}</Alert>},2000) }
+              {/* {sucessMessage && <ShowAlert message={sucessMessage} />} */}
               <Grid item xs>
                 <Typography className="title" variant="h5">
                   {" "}
@@ -89,9 +138,9 @@ export default function Actions() {
                 <div className="title-text-input">کد عملیات :</div>
                 <div>
                   <TextField
-                    id="actionCode"
-                    name="actionCode"
-                    value={formik.values.actionCode}
+                    id="missionCode"
+                    name="missionCode"
+                    value={formik.values.missionCode}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
                     placeholder="کد عملیات"
@@ -102,11 +151,11 @@ export default function Actions() {
                     }}
                     variant="outlined"
                     error={
-                      formik.touched.actionCode &&
-                      Boolean(formik.errors.actionCode)
+                      formik.touched.missionCode &&
+                      Boolean(formik.errors.missionCode)
                     }
                     helperText={
-                      formik.touched.actionCode && formik.errors.actionCode
+                      formik.touched.missionCode && formik.errors.missionCode
                     }
                   />
                 </div>
@@ -136,9 +185,9 @@ export default function Actions() {
 
                 <div>
                   <TextField
-                    id="actionName"
-                    name="actionName"
-                    value={formik.values.actionName}
+                    id="missionName"
+                    name="missionName"
+                    value={formik.values.missionName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
                     placeholder="نام عملیات"
@@ -149,29 +198,36 @@ export default function Actions() {
                     }}
                     variant="outlined"
                     error={
-                      formik.touched.actionName &&
-                      Boolean(formik.errors.actionName)
+                      formik.touched.missionName &&
+                      Boolean(formik.errors.missionName)
                     }
                     helperText={
-                      formik.touched.actionName && formik.errors.actionName
+                      formik.touched.missionName && formik.errors.missionName
                     }
                   />
                 </div>
               </Grid>
               <Grid item xs style={{}}>
-                <Button type="submit" variant="contained" color="primary">
+              <div className={ (Id && 'hidden' )}><Button type="submit" variant="contained" color="primary">
                   ثبت
-                </Button>
+                </Button></div> 
+                <div className={ (!Id && 'hidden' )}><Button type="submit" onClick={(e)=>handleClickEdit(e)} variant="contained" color="primary">
+                  ویرایش
+                </Button></div> 
+                <div style={{color:"red"}}>{err}</div>
               </Grid>
             </Grid>
           </form>
           <Grid container style={{ textAlign: "center" }}>
             <Grid item xs>
            
-              {/* <TableComponent
+               <TableComponent
                 columns={["کد عملیات", "نام عملیات", "ویرایش"]}
                 rows={actionData}
-              /> */}
+                handleDelete={deleteHandler}
+                handleEdit={handleEdit}
+                name={'actions'}
+              /> 
             </Grid>
           </Grid>
         </Typography>

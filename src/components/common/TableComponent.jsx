@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
-import { useState } from 'react';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -28,17 +28,9 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+
+
 
 const useStyles = makeStyles({
   table: {
@@ -46,9 +38,20 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TableComponent({rows,columns}) {
-  const [satr, setSatr] = useState(rows)
-  console.log(rows , columns);
+export default function TableComponent({rows,columns,name,handleDelete,handleEdit}) {
+  // console.log("table rowssss : " , rows)
+  // console.log("table name : " , name)
+  // function convertRows(rows, name) {
+  //   console.log(" i am in convertrows" , name , rows)  
+  //   (rows && name==='actions') && (
+  //     rows.map(({ id, missionCode, missionName }) => {
+  //       console.log( { id: id, code: missionCode, name: missionName })
+  //       return {id:id, code:missionCode, name:missionName};
+  //     })
+  //  ) }
+  
+  // const changeRows = convertRows(rows, name);
+  // console.log("change rows : ", changeRows);
   const classes = useStyles();
    
   return (
@@ -60,16 +63,16 @@ export default function TableComponent({rows,columns}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {satr.map((row,index) => (
+          {rows.map((row,index) => (
           
             <StyledTableRow key={row.id}>
-              <StyledTableCell align="center">{row.code }</StyledTableCell>
-              <StyledTableCell align="center">{row.name}</StyledTableCell>  
+              <StyledTableCell align="center">{row.missionCode }</StyledTableCell>
+              <StyledTableCell align="center">{row.missionName}</StyledTableCell>  
               { row.manager && <StyledTableCell align="center">{row.manager }</StyledTableCell>}          
               { row.controll && <StyledTableCell align="center">{row.controll }</StyledTableCell>}          
               <StyledTableCell align="center"> 
-              <span style={{marginLeft:"10px", color:"green"}}><FiEdit style={{fontSize:"1.4rem"}}/></span>
-              <span style={{ color:"red"}}><MdDelete style={{fontSize:"1.4rem"}}/></span>
+              <span style={{marginLeft:"10px", color:"green"}} onClick={(e)=>handleEdit(e,row)}><FiEdit style={{fontSize:"1.4rem"}}/></span>
+              <span style={{ color:"red"}} onClick={()=>handleDelete(row.id)}><MdDelete style={{fontSize:"1.4rem"}}/></span>
                </StyledTableCell>            
             
             </StyledTableRow>
