@@ -7,12 +7,88 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
-import TableComponent from "../common/TableComponent";
+import React, { useEffect, useState } from "react";
+
 import "./Home.css";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import MyAxios from "../myAxios";
+import StationTable from "../common/StationTable";
 export default function Stations() {
+  const [stationData , setStationData] = useState([]);
+  const [Id , setId] = useState("");
+  const [err , setErr] = useState('');
+  const [successMessage ,setSuccessMessage] = useState('');
+  //send the field for set in table
+  const submitStations=async(values)=>{
+    await MyAxios("stations/newStation" , 'post' , values)
+    .then((response)=>{
+      if(response.data.success){
+        getStations();
+        formik.values.stationCode="";
+        formik.values.stationName="";        
+        setErr("");
+        setSuccessMessage("این عملیات با موفقیت انجام شد")
+      
+      }
+      
+      else{ setErr("این کد عملیات قبلا وجود داشته است");
+      }
+    })
+    .catch((error)=>console.log(error))
+ 
+  }
+ 
+  //delete the row of table or an action
+  const deleteHandler=async(id)=>{
+  await MyAxios(`stations/deleteStations/${id}`)
+  .then((response)=>getStations())
+  .catch((error)=>console.log(error.message))
+  }
+  console.log(err)
+  //get an action from table
+  const handleEdit=(event,row)=>{
+    event.preventDefault();
+    console.log("handle edit ,,,,,,,,,,,,,,,,,,,,",row)
+    setId(row.id)
+   formik.values.stationCode=row.stationCode;
+   formik.values.stationName=row.stationName;   
+  }
+ 
+  //  Edit the row of table or an action
+  const handleClickEdit=async(event)=>{
+     event.preventDefault();
+     const updatedValue={
+      id:Id,
+      stationCode: formik.values.stationCode,
+      stationName:`'${formik.values.stationName}'`
+     }
+     console.log("handle edit click ......",updatedValue)
+     await MyAxios(`stations/updateStation`, "post" ,updatedValue)
+     .then((response)=>{
+      getStations();
+      formik.values.stationCode="";
+    formik.values.stationName="";
+    setId("");})
+     .catch((error)=>console.log(error.message))
+
+  }
+
+
+  
+  //get all actions 
+  async function getStations() {   
+    await MyAxios("stations/allStations")
+      .then((response) => {
+        setStationData(response.data.data);    
+      })
+      .catch((error) => console.log(error.message));
+    return;
+  }
+  useEffect(() => {
+    getStations();   
+  }, []);
+
 //   useEffect(()=>{
 //     const getAcions =async()=>{
 //      await MyAxios("" , values )
@@ -30,7 +106,7 @@ export default function Stations() {
     },
     validationSchema: validationForm,
     onSubmit: (values) => {
-      console.log(values);
+      submitStations(values);
     },
   });
 
@@ -136,20 +212,24 @@ export default function Stations() {
                 </div>
               </Grid>
               <Grid item xs style={{}}>
-                <Button type="submit" variant="contained" color="primary">
+              <div className={ (Id && 'hidden' )}><Button type="submit" variant="contained" color="primary">
                   ثبت
-                </Button>
+                </Button></div> 
+                <div className={ (!Id && 'hidden' )}><Button type="submit" onClick={(e)=>handleClickEdit(e)} variant="contained" color="primary">
+                  ویرایش
+                </Button></div> 
+                <div style={{color:"red"}}>{err}</div>
               </Grid>
             </Grid>
           </form>
           <Grid container style={{ textAlign: "center" }}>
             <Grid item xs>
-              <TableComponent
+              <StationTable
                 columns={["کد ایستگاه", "نام ایستگاه", " ویرایش "]}
-                rows={[
-                  { name: "a", code: 11 },
-                  { name: "b", code: 12 },
-                ]}
+                rows={stationData}
+                handleDelete={deleteHandler}
+                handleEdit={handleEdit}
+                name={'station'}
               />
             </Grid>
           </Grid>

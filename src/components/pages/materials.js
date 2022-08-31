@@ -8,31 +8,37 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import TableComponent from "../common/TableComponent";
+
 import "./Home.css";
 import * as Yup from "yup";
-import {  useFormik } from "formik";
+import { useFormik } from "formik";
 import MyAxios from "../myAxios";
-// import ShowAlert from "../common/ShowAlert";
-// import Alert from "@material-ui/lab/Alert";
-export default function Actions() {
-  const [actionData, setActionData] = useState([]);
-  const [Id , setId] = useState('');
-  const [err , setErr]= useState('');
-  const [sucessMessage , setSuccessMessage]= useState('')
-  //send the field for set in table 
-  const submitActoins=async(values)=>{
-    await MyAxios("missions/newMission" , 'post' , values)
+import MaterialsTable from "../common/MaterialsTable";
+export default function Materials() {
+  const [materialData , setMaterialData] = useState([]);
+  const [Id , setId] = useState("");
+  const [err , setErr] = useState('');
+  const [successMessage ,setSuccessMessage] = useState('');
+
+  //reset all states 
+  const resetStates=()=>{
+    formik.values.materialCode="";
+    formik.values.materialName="";        
+    setErr("");
+    // setSuccessMessage("ین عملیات با موفقیت انجام شد")
+  }
+  //send the field for set in table
+  const submitMaterial=async(values)=>{
+    await MyAxios("materials/createMaterial" , 'post' , values)
     .then((response)=>{
       if(response.data.success){
-        getActions();
-        formik.values.missionCode="";
-        formik.values.missionName="";        
-        setErr("");
-        setSuccessMessage("این عملیات با موفقیت انجام شد")
+        getMaterials();
+       
       
       }
-      else setErr("این کد عملیات قبلا وجود داشته است")
+      
+      else{ setErr("این کد  قبلا وجود داشته است");
+      }
     })
     .catch((error)=>console.log(error))
  
@@ -40,18 +46,18 @@ export default function Actions() {
  
   //delete the row of table or an action
   const deleteHandler=async(id)=>{
-  await MyAxios(`missions/deleteMissions/${id}`)
-  .then((response)=>getActions())
+  await MyAxios(`materials/deleteMaterial/${id}`)
+  .then((response)=>getMaterials())
   .catch((error)=>console.log(error.message))
   }
-
+  console.log(err)
   //get an action from table
   const handleEdit=(event,row)=>{
     event.preventDefault();
-    console.log("handle edit ,,,,,,,,,,,,,,,,,,,,",row)
+   
     setId(row.id)
-   formik.values.missionCode=row.missionCode;
-   formik.values.missionName=row.missionName;   
+   formik.values.materialCode=row.materialCode;
+   formik.values.materialName=row.materialName;   
   }
  
   //  Edit the row of table or an action
@@ -59,15 +65,15 @@ export default function Actions() {
      event.preventDefault();
      const updatedValue={
       id:Id,
-      missionCode: formik.values.missionCode,
-      missionName:`'${formik.values.missionName}'`
+      materialCode: formik.values.materialCode,
+      materialName:`'${formik.values.materialName}'`
      }
      console.log("handle edit click ......",updatedValue)
-     await MyAxios(`missions/updateMission`, "post" ,updatedValue)
+     await MyAxios(`materials/updateMaterial`, "post" ,updatedValue)
      .then((response)=>{
-      getActions();
-      formik.values.missionCode="";
-    formik.values.missionName="";
+      getMaterials();
+      formik.values.materialCode="";
+    formik.values.materialName="";
     setId("");})
      .catch((error)=>console.log(error.message))
 
@@ -75,35 +81,41 @@ export default function Actions() {
 
 
   
-  //get all actions 
-  async function getActions() {   
-    await MyAxios("missions/allMissions")
+  //get all mateials 
+  async function getMaterials() {   
+    await MyAxios("materials/allMaterials")
       .then((response) => {
-        setActionData(response.data.data);    
+        setMaterialData(response.data.data);    
+        resetStates();
       })
       .catch((error) => console.log(error.message));
     return;
   }
   useEffect(() => {
-    getActions();   
+    getMaterials();   
   }, []);
 
-  console.log("action data", actionData);
+//   useEffect(()=>{
+//     const getAcions =async()=>{
+//      await MyAxios("" , values )
+//      return;
+//     }
+//  }, [])
   const validationForm = Yup.object().shape({
-    missionCode: Yup.string().required("کد عملیات  را وارد کنید"),
-    missionName: Yup.string().required(" نام عملیات را وارد کنید"),
+    materialCode: Yup.string().required("کد ماده را وارد کنید"),
+    materialName: Yup.string().required(" نام ماده را وارد کنید"),
   });
   const formik = useFormik({
     initialValues: {
-      missionCode:  "",
-      missionName:"",
+      materialCode: "",
+      materialName: "",
     },
     validationSchema: validationForm,
     onSubmit: (values) => {
-     
-      submitActoins(values)
+     submitMaterial(values);
     },
   });
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -114,12 +126,10 @@ export default function Actions() {
         >
           <form onSubmit={formik.handleSubmit} className="formContainer">
             <Grid container style={{ textAlign: "center" }}>
-              {/* {sucessMessage && setInterval(()=>{return <Alert severity="success">{sucessMessage}</Alert>},2000) } */}
-              {/* {sucessMessage && <ShowAlert message={sucessMessage} />} */}
               <Grid item xs>
                 <Typography className="title" variant="h5">
                   {" "}
-                  ثبت عملیات جدید{" "}
+                  ثبت ایستگاه جدید{" "}
                 </Typography>
               </Grid>
             </Grid>
@@ -134,15 +144,15 @@ export default function Actions() {
                 }}
                 xs
               >
-                <div className="title-text-input">کد عملیات :</div>
+                <div className="title-text-input">کد ایستگاه :</div>
                 <div>
                   <TextField
-                    id="missionCode"
-                    name="missionCode"
-                    value={formik.values.missionCode}
+                    id="materialCode"
+                    name="materialCode"
+                    value={formik.values.materialCode}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
-                    placeholder="کد عملیات"
+                    placeholder="کد ایستگاه"
                     fullWidth
                     margin="normal"
                     InputLabelProps={{
@@ -150,12 +160,13 @@ export default function Actions() {
                     }}
                     variant="outlined"
                     error={
-                      formik.touched.missionCode &&
-                      Boolean(formik.errors.missionCode)
+                      formik.touched.materialCode &&
+                      Boolean(formik.errors.materialCode)
                     }
                     helperText={
-                      formik.touched.missionCode && formik.errors.missionCode
+                      formik.touched.materialCode && formik.errors.materialCode
                     }
+                   
                   />
                 </div>
               </Grid>
@@ -180,16 +191,16 @@ export default function Actions() {
                 }}
                 lg
               >
-                <div className="title-text-input">نام عملیات :</div>
+                <div className="title-text-input">نام ایستگاه :</div>
 
                 <div>
                   <TextField
-                    id="missionName"
-                    name="missionName"
-                    value={formik.values.missionName}
+                    id="materialName"
+                    name="materialName"
+                    value={formik.values.materialName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
-                    placeholder="نام عملیات"
+                    placeholder="نام ایستگاه"
                     fullWidth
                     margin="normal"
                     InputLabelProps={{
@@ -197,11 +208,11 @@ export default function Actions() {
                     }}
                     variant="outlined"
                     error={
-                      formik.touched.missionName &&
-                      Boolean(formik.errors.missionName)
+                      formik.touched.materialName &&
+                      Boolean(formik.errors.materialName)
                     }
                     helperText={
-                      formik.touched.missionName && formik.errors.missionName
+                      formik.touched.materialName && formik.errors.materialName
                     }
                   />
                 </div>
@@ -219,14 +230,13 @@ export default function Actions() {
           </form>
           <Grid container style={{ textAlign: "center" }}>
             <Grid item xs>
-           
-               <TableComponent
-                columns={["کد عملیات", "نام عملیات", "ویرایش"]}
-                rows={actionData}
+              <MaterialsTable
+                columns={["کد ماده", "نام ماده", " ویرایش "]}
+                rows={materialData}
                 handleDelete={deleteHandler}
                 handleEdit={handleEdit}
-                name={'actions'}
-              /> 
+                name={'material'}
+              />
             </Grid>
           </Grid>
         </Typography>

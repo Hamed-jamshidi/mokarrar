@@ -13,6 +13,7 @@ import Information from '../pages/Information';
 import Controllers from '../pages/Controllers';
 import Home from "../pages/Home"
 import NotFound from '../pages/NotFound';
+import Materials from '../pages/materials';
 
 function Main(){
     return( 
@@ -23,7 +24,7 @@ function Main(){
    <Route path='/' exact element={<Home/>} />
    <Route path='/controllers'  element={<Controllers/>} />
    <Route path='/information' element={<Information/>} />
-   <Route path='/products' element={<Products/>} />
+   <Route path='/materials' element={<Materials/>} />
    <Route path='/contact-us' element={<ContactUs/>} />
    {/* <Route path='/sign-up' element={<SignUp/>} /> */}
    <Route path='/actions' element={<Actions/>} />

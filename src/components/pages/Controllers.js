@@ -7,25 +7,101 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
-import TableComponent from "../common/TableComponent";
+import React, { useEffect, useState } from "react";
+
 import "./Home.css";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import ControllerTable from "../common/ControllerTable";
+import MyAxios from "../myAxios";
 
 export default function Controllers() {
+  const [controllersData , setControllerData ] = useState([]);
+  const [Id , setId]  = useState("");
+  const [err ,setErr] = useState('');
+  const [successMessage , setSuccessMessage] = useState('');
+   //send the field for set in table
+   const submitController=async(values)=>{
+    await MyAxios("controls/newControler" , 'post' , values)
+    .then((response)=>{
+      if(response.data.success){
+        getControlleres();
+        formik.values.controlCode="";
+        formik.values.controlName="";        
+        setErr("");
+        setSuccessMessage("این عملیات با موفقیت انجام شد")
+      
+      }
+      
+      else{ setErr("این کد  قبلا وجود داشته است");
+      }
+    })
+    .catch((error)=>console.log(error))
+ 
+  }
+ 
+  //delete the row of table or an action
+  const deleteHandler=async(id)=>{
+  await MyAxios(`controls/deleteControls/${id}`)
+  .then((response)=>getControlleres())
+  .catch((error)=>console.log(error.message))
+  }
+  console.log(err)
+  //get an action from table
+  const handleEdit=(event,row)=>{
+    event.preventDefault();
+    console.log("handle edit ,,,,,,,,,,,,,,,,,,,,",row)
+    setId(row.id)
+   formik.values.controlCode=row.controlCode;
+   formik.values.controlName=row.controlName;   
+  }
+ 
+  //  Edit the row of table or an action
+  const handleClickEdit=async(event)=>{
+     event.preventDefault();
+     
+     const updatedValue={
+      id:Id,
+      controlsCode: formik.values.controlCode,
+      controlsName:`'${formik.values.controlName}'`
+     }
+     console.log("handle edit click ......",updatedValue)
+     await MyAxios(`controls/updateControls`, "post" ,updatedValue)
+     .then((response)=>{
+      getControlleres();
+      formik.values.controlCode="";
+    formik.values.controlName="";
+    setId("");})
+     .catch((error)=>console.log(error.message))
+
+  }
+
+
+  
+  //get all actions 
+  async function getControlleres() {   
+    await MyAxios("controls/allControls")
+      .then((response) => {
+        setControllerData(response.data.data);    
+      })
+      .catch((error) => console.log(error.message));
+    return;
+  }
+  useEffect(() => {
+    getControlleres();   
+  }, []);
   const validationForm = Yup.object().shape({
-    ctrAttrCode: Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
-    ctrAttrName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
+    controlCode: Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
+    controlName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
   });
   const formik = useFormik({
     initialValues: {
-      ctrAttrCode: "",
-      ctrAttrName: "",
+      controlCode: "",
+      controlName: "",
     },
     validationSchema: validationForm,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (values) =>{
+      submitController(values);
     },
   });
 
@@ -60,9 +136,9 @@ export default function Controllers() {
                 <div className="title-text-input">کد مشخصه :</div>
                 <div>
                   <TextField
-                    id="ctrAttrCode"
-                    name="ctrAttrCode"
-                    value={formik.values.ctrAttrCode}
+                    id="controlCode"
+                    name="controlCode"
+                    value={formik.values.controlCode}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
                     placeholder="کد مشخطه"
@@ -73,11 +149,11 @@ export default function Controllers() {
                     }}
                     variant="outlined"
                     error={
-                      formik.touched.ctrAttrCode &&
-                      Boolean(formik.errors.ctrAttrCode)
+                      formik.touched.controlCode &&
+                      Boolean(formik.errors.controlCode)
                     }
                     helperText={
-                      formik.touched.ctrAttrCode && formik.errors.ctrAttrCode
+                      formik.touched.controlCode && formik.errors.controlCode
                     }
                   />
                 </div>
@@ -107,9 +183,9 @@ export default function Controllers() {
 
                 <div>
                   <TextField
-                    id="ctrAttrName"
-                    name="ctrAttrName"
-                    value={formik.values.ctrAttrName}
+                    id="controlName"
+                    name="controlName"
+                    value={formik.values.controlName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
                     placeholder="نام مشخصه"
@@ -120,31 +196,35 @@ export default function Controllers() {
                     }}
                     variant="outlined"
                     error={
-                      formik.touched.ctrAttrName &&
-                      Boolean(formik.errors.ctrAttrName)
+                      formik.touched.controlName &&
+                      Boolean(formik.errors.controlName)
                     }
                     helperText={
-                      formik.touched.ctrAttrName && formik.errors.ctrAttrName
+                      formik.touched.controlName && formik.errors.controlName
                     }
                   />
                 </div>
               </Grid>
               <Grid item xs style={{}}>
-                <Button type="submit" variant="contained" color="primary">
+              <div className={ (Id && 'hidden' )}><Button type="submit" variant="contained" color="primary">
                   ثبت
-                </Button>
+                </Button></div> 
+                <div className={ (!Id && 'hidden' )}><Button type="submit" onClick={(e)=>handleClickEdit(e)} variant="contained" color="primary">
+                  ویرایش
+                </Button></div> 
+                <div style={{color:"red"}}>{err}</div>
               </Grid>
             </Grid>
           </form>
 
           <Grid container style={{ textAlign: "center" }}>
             <Grid item xs>
-              <TableComponent
+              <ControllerTable
                 columns={["کد مشخصه", "نام مشخصه", " ویرایش "]}
-                rows={[
-                  { name: "a", code: 11 },
-                  { name: "b", code: 12 },
-                ]}
+                rows={controllersData}
+                handleDelete={deleteHandler}
+                handleEdit={handleEdit}
+                name={'controller'}
               />
             </Grid>
           </Grid>

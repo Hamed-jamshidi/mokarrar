@@ -6,6 +6,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import '../pages/Home.css'
+import { constants } from '../../constants';
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -23,49 +25,39 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ProductCard() {
+export default function ProductCard(product) {
+  console.log("prrrrrrrrrrrrrrrrrrrrrrrrrrr" , product)
+  
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <Card className={classes.root} variant="outlined" >
       <CardContent >
-        {/* <Typography className={classes.title} color="textSecondary" gutterBottom>
-        <p>اکریلییک</p>
-        </Typography>
-        <Typography variant="h5" component="h2">
-         <p>نام محصول</p>
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-         <p>شماره بچ</p>
-        </Typography>
-        <Typography variant="body2" component="p">
-          <p>نتیجه</p>
-          <br />
-         <hr/>
-        </Typography> */}
+       
 
         <div className="cardRows fard">
            <span>نام قسمت</span>
-           <span>اکریلییک</span>            
+           <span>{constants.partitionName[`${product.product.partition}`]}</span>            
         </div>
         <div className="cardRows">
            <span>نام محصول</span>
-           <span>xxxx</span>            
+           <span>{product.product.productName}</span>   
         </div>
         <div className="cardRows fard">
            <span>شماره بچ </span>
-           <span>123456</span>            
+           <span>{product.product.batchNumber}</span>            
         </div>
         <div className="cardRows">
            <span>نتیجه تولید </span>
-           <span>مثبت</span>            
+           <span>{product.product.produtionType}</span>      
         </div>
        
       </CardContent>
       <CardActions className='btnBox' >
         {/* <Button variant="contained" color="primary" size="small">ویرایش</Button> */}
-        <Button  color="primary" size="small">ویرایش</Button>
+        <Link to="/information"><Button color="primary" size="small">ویرایش</Button></Link>
+        
         <Button  color="secondary" size="small">حذف</Button>
       </CardActions>
     </Card>

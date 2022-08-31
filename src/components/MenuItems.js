@@ -21,7 +21,7 @@ export const MenuItems = [
   },
   {
     title: 'ثبت نام ماده جدید',
-    path: '/products',
+    path: '/materials',
     cName: 'dropdown-link',
   },
   {

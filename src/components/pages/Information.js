@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 import TableComponent from "../common/TableComponent";
 import "./Home.css";
 import styles from "./Information.module.css";
@@ -28,6 +28,11 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 export default function Information() {
+
+
+
+
+
   const validationForm = Yup.object().shape({
     productName: Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
     productionLocation: Yup.string().required(
