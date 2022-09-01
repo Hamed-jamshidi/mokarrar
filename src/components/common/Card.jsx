@@ -49,7 +49,7 @@ export default function ProductCard(product) {
            <span>{product.product.batchNumber}</span>            
         </div>
         <div className="cardRows">
-           <span>نتیجه تولید </span>
+           <span>نوع تولید </span>
            <span>{product.product.produtionType}</span>      
         </div>
        
