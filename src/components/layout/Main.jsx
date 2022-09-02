@@ -15,9 +15,11 @@ import Home from "../pages/Home"
 import NotFound from '../pages/NotFound';
 import Materials from '../pages/materials';
 
+
 function Main(){
     return( 
-    <Routes>
+      // <ProductProvider>
+ <Routes>
       <Route path='/signin'  element={<Signup/>} />
       
   <Route element={<ProtectedRoute/>}>
@@ -36,6 +38,10 @@ function Main(){
 
    </Route>
 </Routes>
+
+
+      // </ProductProvider>
+   
 )
 }
 

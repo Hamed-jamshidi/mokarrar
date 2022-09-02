@@ -6,6 +6,7 @@ import ProductCard from '../common/Card';
 import { useEffect } from 'react';
 import MyAxios from '../myAxios';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const [productsData ,setProductsData]= useState([]);
+
   //get all products 
   const getAllProducts=async()=>{
     await MyAxios(`eblaghiats/allProducts/0`)

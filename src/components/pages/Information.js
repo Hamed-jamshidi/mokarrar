@@ -26,9 +26,12 @@ import {
 import CollapsibleTable from "../common/CollapsibleTable";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useProduct } from "../context/ProductProvider";
 
 export default function Information() {
-
+const product = useProduct();
+console.log("product in information .................", product)
+    
 
 
 

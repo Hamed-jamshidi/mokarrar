@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import '../pages/Home.css'
 import { constants } from '../../constants';
 import { Link } from 'react-router-dom';
+import { useProductActions } from '../context/ProductProvider';
+import MyAxios from '../myAxios';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -26,8 +28,24 @@ const useStyles = makeStyles({
 });
 
 export default function ProductCard(product) {
-  console.log("prrrrrrrrrrrrrrrrrrrrrrrrrrr" , product)
+  const [process , setProcess] = useState([])
+  const getAllProcess =async(product)=>{
+    // const url =`eblaghiats/getProcess/${parseInt(product.batchNumber)}`;
+    const url =`eblaghiats/getProcess/batch1`;    
+      
+    await MyAxios(url)
+    .then((response)=>setProcess(response.data.data) )    
+    .catch((err)=>console.log(err.message));
+}
+  const productDispatcher = useProductActions();
   
+// handle click Edit fill a product to reducer state
+  const handleClickEdit =(product) =>{
+   getAllProcess(product)
+   .then((res)=>productDispatcher({type:"GET_PROCESS",payload:product,data:process}));
+   
+  }
+ 
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
@@ -56,7 +74,9 @@ export default function ProductCard(product) {
       </CardContent>
       <CardActions className='btnBox' >
         {/* <Button variant="contained" color="primary" size="small">ویرایش</Button> */}
-        <Link to="/information"><Button color="primary" size="small">ویرایش</Button></Link>
+        <Link to="/information">
+          <Button onClick={()=>handleClickEdit(product.product)} color="primary" size="small">ویرایش</Button>
+          </Link>
         
         <Button  color="secondary" size="small">حذف</Button>
       </CardActions>
