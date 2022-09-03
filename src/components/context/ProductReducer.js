@@ -5,9 +5,10 @@ import { useProduct } from "./ProductProvider";
 const ProductReducer = (state, action) => {   
     
   switch (action.type) {
-    case "GET_PROCESS":
-      console.log("state....................................eddded",{...state , product:action.payload.product,processes:action.payload.process})
-      return {...state , product:action.payload.product,processes:action.payload.process}
+    case "GET_PROCESS":     
+      return {...state , product:action.payload , processes:action.data}
+    case "GET_PARTITION":
+      return {...state , partition:action.partition}
     case "ADD_PROCESS":
       return state;
     default:

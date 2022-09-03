@@ -42,7 +42,7 @@ export default function Home() {
       <React.Fragment>
         {productsData.map((product)=>{
             return ( <Grid key={product.id} item md={4} xs={12} sm={6}>
-                <Paper className={classes.paper}><ProductCard product={product}/></Paper>
+                <Paper className={classes.paper}><ProductCard key={product.id} product={product}/></Paper>
               </Grid>)
         })}
        

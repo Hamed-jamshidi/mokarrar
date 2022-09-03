@@ -13,8 +13,10 @@ import {
   Button,
 } from "@material-ui/core";
 import { useState } from "react";
+import { useProductActions } from "../context/ProductProvider";
 const Signup = () => {
   const [error , setError] = useState("");
+  const ProductDispatcher = useProductActions()
   const validationForm = Yup.object().shape({
     username: Yup.string().required("نام کاربری را وارد کنید  "),
     password: Yup.string().required(" رمز عبور را وارد کنید"),
@@ -29,6 +31,7 @@ const Signup = () => {
       await MyAxios("user/login" , "post" , values )
       .then((response) =>{localStorage.setItem("token" , response.data.data.token);
       setError ("");
+      ProductDispatcher({type:"GET_PARTITION", data:response.data.partition});
       window.location.replace('/'); 
     }).catch((err)=>{console.log(err.message);
     console.log("login failed!")});

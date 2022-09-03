@@ -10,6 +10,7 @@ import { constants } from '../../constants';
 import { Link } from 'react-router-dom';
 import { useProductActions } from '../context/ProductProvider';
 import MyAxios from '../myAxios';
+import { useEffect } from 'react';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -28,21 +29,25 @@ const useStyles = makeStyles({
 });
 
 export default function ProductCard(product) {
-  const [process , setProcess] = useState([])
+  const [process , setProcess] = useState([]);
+  
   const getAllProcess =async(product)=>{
     // const url =`eblaghiats/getProcess/${parseInt(product.batchNumber)}`;
-    const url =`eblaghiats/getProcess/batch1`;    
-      
+    const url =`eblaghiats/getProcess/${product.product.batchNumber}`;    
+      console.log("batchNumber ........." , product.product.batchNumber)
     await MyAxios(url)
     .then((response)=>setProcess(response.data.data) )    
     .catch((err)=>console.log(err.message));
 }
+useEffect(()=>{
+  getAllProcess(product)
+},[])
   const productDispatcher = useProductActions();
   
 // handle click Edit fill a product to reducer state
   const handleClickEdit =(product) =>{
-   getAllProcess(product)
-   .then((res)=>productDispatcher({type:"GET_PROCESS",payload:product,data:process}));
+  
+  productDispatcher({type:"GET_PROCESS",payload:product,data:process});
    
   }
  
