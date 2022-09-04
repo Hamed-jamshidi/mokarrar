@@ -29,52 +29,55 @@ import { useFormik } from "formik";
 import { useProduct } from "../context/ProductProvider";
 import ProcessComponent from "../ProcessComponent";
 import MyAxios from "../myAxios";
-
+import { constants } from "../../constants";
 export default function Information() {
-  const [productNameList ,setProductNameList]= useState([]);
+ 
+  const handleClickEditProduct = async(e,values)=>{
+  console.log("i here is handle click product")
+  
+  await MyAxios("eblaghiats/updateProduct" , "post" , values)
+  .then((res)=>console.log("update process: " , res))
+  .catch((err)=>console.log("err message",err.message))
+ }
+
+ const handleClickSubmitProduct=(e,values)=>{
+ console.log("handle click submit")
+     
+ }
+
+  const product = useProduct();
+
+  const validationForm = Yup.object().shape({
+    productName: Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
+    partition: Yup.string().required(
+      " نام مشخصه کنترلی جدید را وارد کنید"
+    ),
+    batchValue: Yup.number().required(" نام مشخصه کنترلی جدید را وارد کنید"),
+    batchNumber: Yup.number().required(" نام مشخصه کنترلی جدید را وارد کنید"),
+    customerName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
+    sayDate: Yup.date().required(
+      " نام مشخصه کنترلی جدید را وارد کنید"
+    ),
+    startDate: Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),
+  });
 
 
-const product = useProduct();
 
-
-
-
-const validationForm = Yup.object().shape({
-  productName:Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
-  productionLocation:Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-  batchValue:Yup.number().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-  batchNumber:Yup.number().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-  customerName:Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-  dateNotification:Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-  dateProduction: Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),  
-});
-
-// batchNumber: "batch2"
-// batchValue: "1000"
-// close: 0
-// createdAt: "2022-08-28 07:45:13.833 +00:00"
-// customerName: "Hamed"
-// id: 2
-// partition: 2
-// productName: "product2"
-// produtionType: "exam"
-// sayDate: "1969-12-31 20:30:00.000 +00:00"
-// startDate: "1969-12-31 20:30:00.000 +00:00"
-// updatedAt: "2022-08-28 07:45:13.833 +00:00"
-    
   const formik = useFormik({
     initialValues: {
-      productName:product.product.productName||"",
-      productionLocation:product.product.partition|| "",
-      batchValue:product.product.batchValue ||"",
-      batchNumber:product.product.batchNumber|| "",
-      customerName: product.product.customerName||"",
-      dateNotification:product.product.sayDate ||"",
-      dateProduction:product.product.startDate ||""
+      id:product.product.id||null,
+      productName: product.product.productName || "",
+      produtionType: product.product.produtionType || "",
+      partition: product.product.partition || "",
+      batchValue: product.product.batchValue || "",
+      batchNumber: product.product.batchNumber || "",
+      customerName: product.product.customerName || "",
+      sayDate: product.product.sayDate || "",
+      startDate: product.product.startDate || "",
     },
     // validationSchema: validationForm,
     onSubmit: (values) => {
-      console.log(values);
+      handleClickSubmitProduct(values)
     },
   });
 
@@ -125,29 +128,32 @@ const validationForm = Yup.object().shape({
                   <Select
                     className={styles.select}
                     native
-                    id="productionLocation"
-                    name="productionLocation"
-                    value={formik.values.productionLocation}
+                    id="partition"
+                    name="partition"
+                    value={formik.values.partition}
                     onChange={formik.handleChange}
                     inputProps={{
-                      name: "productionLocation",
+                      name: "partition",
                       id: "outlined-age-native-simple",
                     }}
                     error={
-                      formik.touched.productionLocation &&
-                      Boolean(formik.errors.productionLocation)
+                      formik.touched.partition &&
+                      Boolean(formik.errors.partition)
                     }
                     helperText={
-                      formik.touched.productionLocation &&
-                      formik.errors.productionLocation
+                      formik.touched.partition &&
+                      formik.errors.partition
                     }
                   >
-                    <option aria-label="None" value="" />
-                    <option value={10}>اکریلیک</option>
-                    <option value={20}>اپوکسی</option>
-                    <option value={30}>بازیافت</option>
-                    <option value={40}>پلی پورتان</option>
-                    <option value={50}>بازرگانی شیمیایی</option>
+                    {Object.entries(constants.partitionName).map(
+                      (item, index) => {
+                        return (
+                          <option key={index} value={item[0]}>
+                            {item[1]}
+                          </option>
+                        );
+                      }
+                    )}
                   </Select>
                 </Grid>
 
@@ -184,7 +190,7 @@ const validationForm = Yup.object().shape({
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
                     placeholder="شماره بج"
-                    type="number"
+                    type="text"
                     maxWidth
                     margin="normal"
                     InputLabelProps={{
@@ -206,27 +212,32 @@ const validationForm = Yup.object().shape({
 
                   <Select
                     className={styles.select}
-                    id="productionStage"
-                    name="productionStage"
-                    value={formik.values.productionStage}
+                    id="produtionType"
+                    name="produtionType"
+                    value={parseInt(formik.values.produtionType)}
                     onChange={formik.handleChange}
                     inputProps={{
-                      name: "productionStage",
+                      name: "produtionType",
                       id: "outlined-age-native-simple",
                     }}
                     error={
-                      formik.touched.productionStage &&
-                      Boolean(formik.errors.productionStage)
+                      formik.touched.produtionType &&
+                      Boolean(formik.errors.produtionType)
                     }
                     helperText={
-                      formik.touched.productionStage &&
-                      formik.errors.productionStage
+                      formik.touched.produtionType &&
+                      formik.errors.produtionType
                     }
                   >
-                    <option aria-label="None" value="" />
-                    <option value={10}>تولید پایلوت</option>
-                    <option value={20}>تولید آزمایشی</option>
-                    <option value={30}>تولید انبوه</option>
+                    {Object.entries(constants.ProductionType).map(
+                      (item, index) => {
+                        return (
+                          <option key={index} value={item[0]}>
+                            {item[1]}
+                          </option>
+                        );
+                      }
+                    )}
                   </Select>
                 </Grid>
 
@@ -260,20 +271,20 @@ const validationForm = Yup.object().shape({
                   <DatePicker
                     className={styles.dataPicker}
                     type="date"
-                    id="dateNotification"
-                    name="dateNotification"
-                    value={formik.values.dateNotification}
+                    id="sayDate"
+                    name="sayDate"
+                    value={formik.values.sayDate}
                     onChange={formik.handleChange}
                     placeholder="انتخاب تاریخ"
                     format="jYYYY/jMM/jDD"
                     preSelected="1396/05/15"
                     error={
-                      formik.touched.dateNotification &&
-                      Boolean(formik.errors.dateNotification)
+                      formik.touched.sayDate &&
+                      Boolean(formik.errors.sayDate)
                     }
                     helperText={
-                      formik.touched.dateNotification &&
-                      formik.errors.dateNotification
+                      formik.touched.sayDate &&
+                      formik.errors.sayDate
                     }
                   />
                 </Grid>
@@ -282,33 +293,36 @@ const validationForm = Yup.object().shape({
                   <DatePicker
                     type="date"
                     className={styles.dataPicker}
-                    id="dateProduction"
-                    name="dateProduction"
-                    value={formik.values.dateProduction}
+                    id="startDate"
+                    name="startDate"
+                    value={formik.values.startDate}
                     onChange={formik.handleChange}
                     placeholder="انتخاب تاریخ"
                     format="jYYYY/jMM/jDD"
                     preSelected="1396/05/15"
                     error={
-                      formik.touched.dateProduction &&
-                      Boolean(formik.errors.dateProduction)
+                      formik.touched.startDate &&
+                      Boolean(formik.errors.startDate)
                     }
                     helperText={
-                      formik.touched.dateProduction &&
-                      formik.errors.dateProduction
+                      formik.touched.startDate &&
+                      formik.errors.startDate
                     }
                   />
                 </Grid>
-              
+                <Grid className={styles.holder} item md={4} xs={12} sm={6}>
+               {product ?  <Button  type="submit" onClick={(e)=>handleClickEditProduct(e,formik.values)} variant="contained" color="primary">
+                 ویرایش
+                </Button>: <Button  type="submit" variant="contained" color="primary">
+                  ثبت
+                </Button>}
+              </Grid>
               </Grid>
             </Box>
-       {product.processes.map((item,index)=>{
-        return <ProcessComponent key={index} process={item}/>
-       })}
-           
+            {product.processes.map((item, index) => {
+              return <ProcessComponent key={index} process={item} />;
+            })}
           </form>
-
-       
         </Typography>
       </Container>
     </React.Fragment>
