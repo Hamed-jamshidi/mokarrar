@@ -26,12 +26,13 @@ import {
 import CollapsibleTable from "../common/CollapsibleTable";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useProduct } from "../context/ProductProvider";
+import { useProduct, useProductActions } from "../context/ProductProvider";
 import ProcessComponent from "../ProcessComponent";
 import MyAxios from "../myAxios";
 import { constants } from "../../constants";
+import ProcessTable from "../common/ProcessTable";
 export default function Information() {
- 
+ const [alaki ,setAlaki] = useState("")
   const handleClickEditProduct = async(e,values)=>{
   console.log("i here is handle click product")
   
@@ -44,20 +45,18 @@ export default function Information() {
  console.log("handle click submit")
      
  }
-
+ 
   const product = useProduct();
+  const ProductDispatcher = useProductActions()
+  console.log("productttttttttttttttttttttttttttttttttttt ,, " , product);
 
   const validationForm = Yup.object().shape({
     productName: Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
-    partition: Yup.string().required(
-      " نام مشخصه کنترلی جدید را وارد کنید"
-    ),
+    partition: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     batchValue: Yup.number().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     batchNumber: Yup.number().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     customerName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-    sayDate: Yup.date().required(
-      " نام مشخصه کنترلی جدید را وارد کنید"
-    ),
+    sayDate: Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     startDate: Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),
   });
 
@@ -74,18 +73,37 @@ export default function Information() {
       customerName: product.product.customerName || "",
       sayDate: product.product.sayDate || "",
       startDate: product.product.startDate || "",
+      // id:product.id||null,
+      // productName: product.productName || "",
+      // produtionType: product.produtionType || "",
+      // partition: product.partition || "",
+      // batchValue: product.batchValue || "",
+      // batchNumber: product.batchNumber || "",
+      // customerName: product.customerName || "",
+      // sayDate: product.sayDate || "",
+      // startDate: product.startDate || "",
     },
     // validationSchema: validationForm,
     onSubmit: (values) => {
-      handleClickSubmitProduct(values)
+      handleClickSubmitProduct(values);
     },
   });
+
+  const deleteHandler=(id)=>{
+    ProductDispatcher({type:""})
+  }
+  const handleEdit = async(e,row)=>{  
+    e.preventDefault()
+    console.log("handleEdit information rowwwwwwwwww : " , row );
+    ProductDispatcher({type:"GET_SELECTED" , payload:row});
+    setAlaki("alaki migi");
+  }
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Container maxWidth="xl">
-        <Typography
+        <Typography 
           component="div"
           style={{ backgroundColor: "white", height: "100vh" }}
         >
@@ -319,10 +337,24 @@ export default function Information() {
               </Grid>
               </Grid>
             </Box>
-            {product.processes.map((item, index) => {
+          
+            <ProcessComponent   />
+            {/* {product.processes.map((item, index) => {
               return <ProcessComponent key={index} process={item} />;
-            })}
+            })} */}
           </form>
+          <Grid container style={{ textAlign: "center" }}>
+            <Grid item xs>
+           
+               <ProcessTable
+                columns={["نام عملیات", "مشخصات کنترلی", "نام اپراتور تولید", "نام ایستگاه", "معیار پذیرش ", "نام ماده  " , " مقداراندازه گیری شده", " کد شناسایی" , "زمان شروع ", "زمان پایان","نتیجه","ویرایش"]}
+                rows={product.processes}
+                handleDelete={deleteHandler}
+                handleEdit={handleEdit}
+                name={'actions'}
+              /> 
+            </Grid>
+          </Grid>
         </Typography>
       </Container>
     </React.Fragment>

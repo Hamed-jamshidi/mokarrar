@@ -19,7 +19,7 @@ export default function Actions() {
   const [actionData, setActionData] = useState([]);
   const [Id , setId] = useState('');
   const [err , setErr]= useState('');
-  const [sucessMessage , setSuccessMessage]= useState('')
+  const [sucessMessage , setSuccessMessage]= useState('');
   //send the field for set in table 
   const submitActoins=async(values)=>{
     await MyAxios("missions/newMission" , 'post' , values)

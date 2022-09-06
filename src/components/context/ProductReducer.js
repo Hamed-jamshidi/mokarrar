@@ -11,6 +11,9 @@ const ProductReducer = (state, action) => {
       return {...state , partition:action.partition}
     case "ADD_PROCESS":
       return state;
+    case "GET_SELECTED":
+      console.log("action payload is sssssssssssss" , action.payload)
+      return  {...state , selectedProcess : action.payload};
     default:
       return state;
   }

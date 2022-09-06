@@ -10,6 +10,7 @@ const ProductProvider = ({children}) => {
     const initialState={
         product :[],
         processes:[],
+        selectedProcess:[],
         partition:0
     };
     const [product , dispatcher] = useReducer(ProductReducer ,initialState);

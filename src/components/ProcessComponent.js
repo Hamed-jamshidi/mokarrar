@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useDebugValue, useEffect, useState } from "react";
 
 import "./pages/Home.css";
 import styles from "./pages/Information.module.css";
@@ -27,24 +27,26 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import MyAxios from "./myAxios";
+import { useProduct, useProductActions } from "./context/ProductProvider";
 
-export default function ProcessComponent(process) {
-  console.log("processs in processs component . ..... ", process);
+export default function ProcessComponent() {
+  const process = useProduct();
+
+  console.log(
+    "processs in processs component . ..... ",
+    process.selectedProcess
+  );
   const [productNameList, setProductNameList] = useState([]);
   const [controllerList, setControllerList] = useState([]);
   const [stationList, setStatioList] = useState([]);
   const [actionTypeName, setActionTypeName] = useState([]);
 
- const handleChangeProcess=async(e,values)=>{
-  e.preventDefault();
-  await MyAxios("eblaghiats/updateProcess" , "post" , values)
-  .then((res)=>console.log("update process: " , res))
-  .catch((err)=>console.log("err message",err.message))
-
- }
-
-
-
+  const handleChangeProcess = async (e, values) => {
+    e.preventDefault();
+    await MyAxios("eblaghiats/updateProcess", "post", values)
+      .then((res) => console.log("update process: ", res))
+      .catch((err) => console.log("err message", err.message));
+  };
 
   //get all productname list
   const getAllProductNameList = async () => {
@@ -94,6 +96,23 @@ export default function ProcessComponent(process) {
     getAllControllerList();
     getAllStationList();
   }, []);
+
+  useEffect(() => {
+    formik.values.id = process.selectedProcess.id;
+    formik.values.batchNumber = process.selectedProcess.batchNumber;
+    formik.values.actionName = process.selectedProcess.actionName;
+    formik.values.controllerName = process.selectedProcess.controllerName;
+    formik.values.operatorName = process.selectedProcess.operatorName;
+    formik.values.stationName = process.selectedProcess.stationName;
+    formik.values.acceptValue = process.selectedProcess.acceptValue;
+    formik.values.materialName = process.selectedProcess.materialName;
+    formik.values.measuredValue = process.selectedProcess.measuredValue;
+    formik.values.result = process.selectedProcess.result;
+    formik.values.identifyCode = process.selectedProcess.identifyCode;
+    formik.values.startTime = process.selectedProcess.startTime;
+    formik.values.endTime = process.selectedProcess.endTime;
+  }, [process.selectedProcess]);
+
   console.log("station list ,,,,,,,,,,,,,,,,,,,,,,,,", stationList);
 
   const validationForm = Yup.object().shape({
@@ -106,28 +125,26 @@ export default function ProcessComponent(process) {
     acceptValue: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     materialName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     measuredValue: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-    identifyCode: Yup.string().required(
-      " نام مشخصه کنترلی جدید را وارد کنید"
-    ),
+    identifyCode: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     startTime: Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     endTime: Yup.date().required(" تاریخ پایان مشخصه کنترلی جدید را وارد کنید"),
   });
 
   const formik = useFormik({
     initialValues: {
-      id:process.process.id || null,
-      batchNumber: process.process.batchNumber || "",
-      actionName: process.process.actionName || "",
-      controllerName: process.process.controllerName || "",
-      operatorName: process.process.operatorName || "",
-      stationName: process.process.stationName || "",
-      acceptValue: process.process.acceptValue || "",
-      materialName: process.process.materialName || "",
-      measuredValue: process.process.measuredValue || "",
-      result: process.process.result || false,
-      identifyCode: process.process.identifyCode || 0,
-      startTime: process.process.startTime || new Date(),
-      endTime: process.process.endTime || new Date(),
+      id: process.selectedProcess.id || null,
+      batchNumber: process.selectedProcess.batchNumber || "",
+      actionName: process.selectedProcess.actionName || "",
+      controllerName: process.selectedProcess.controllerName || "",
+      operatorName: process.selectedProcess.operatorName || "",
+      stationName: process.selectedProcess.stationName || "",
+      acceptValue: process.selectedProcess.acceptValue || "",
+      materialName: process.selectedProcess.materialName || "",
+      measuredValue: process.selectedProcess.measuredValue || "",
+      result: process.selectedProcess.result || false,
+      identifyCode: process.selectedProcess.identifyCode || 0,
+      startTime: process.selectedProcess.startTime || new Date(),
+      endTime: process.selectedProcess.endTime || new Date(),
     },
     // validationSchema: validationForm,
     onSubmit: (values) => {
@@ -141,6 +158,10 @@ export default function ProcessComponent(process) {
       <Container maxWidth="xl">
         <form onSubmit={formik.handleSubmit}>
           <Box className="formContainer">
+          <h3 className={styles.title}>
+                {" "}
+                فرایند {formik.values.actionName}
+              </h3>
             <Grid container spacing={3}>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
                 <span className={styles.titleInput}>نام عملیات</span>
@@ -163,9 +184,14 @@ export default function ProcessComponent(process) {
                     formik.touched.actionName && formik.errors.actionName
                   }
                 >
-                 {actionTypeName.map((item , index)=>{return <option key={index} value={item.missionCode}> {item.missionName}</option>})}
-                  
-                  
+                  {actionTypeName.map((item, index) => {
+                    return (
+                      <option key={index} value={item.missionCode}>
+                        {" "}
+                        {item.missionName}
+                      </option>
+                    );
+                  })}
                 </Select>
               </Grid>
 
@@ -192,8 +218,13 @@ export default function ProcessComponent(process) {
                     formik.errors.controllerName
                   }
                 >
-                  {controllerList.map((item ,index)=>{return <option key={index} value={item.controlCode}>{item.controlName}</option>})}
-                
+                  {controllerList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.controlCode}>
+                        {item.controlName}
+                      </option>
+                    );
+                  })}
                 </Select>
               </Grid>
 
@@ -228,7 +259,6 @@ export default function ProcessComponent(process) {
                   native
                   id="stationName"
                   name="stationName"
-                  
                   value={parseInt(formik.values.stationName)}
                   onChange={formik.handleChange}
                   inputProps={{
@@ -243,7 +273,7 @@ export default function ProcessComponent(process) {
                     formik.touched.stationName && formik.errors.stationName
                   }
                 >
-                  {stationList.map((item, index) =>{
+                  {stationList.map((item, index) => {
                     return (
                       <option key={index} value={item.stationCode}>
                         {item.stationName}
@@ -300,9 +330,14 @@ export default function ProcessComponent(process) {
                     formik.touched.materialName && formik.errors.materialName
                   }
                 >
-                 {productNameList.map((item ,index)=>{return  <option key={index} value={item.materialCode}> {item.materialName} </option>})}
-                 
-                  
+                  {productNameList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.materialCode}>
+                        {" "}
+                        {item.materialName}{" "}
+                      </option>
+                    );
+                  })}
                 </Select>
               </Grid>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
@@ -350,8 +385,7 @@ export default function ProcessComponent(process) {
                     Boolean(formik.errors.identifyCode)
                   }
                   helperText={
-                    formik.touched.identifyCode &&
-                    formik.errors.identifyCode
+                    formik.touched.identifyCode && formik.errors.identifyCode
                   }
                 />
               </Grid>
@@ -393,11 +427,20 @@ export default function ProcessComponent(process) {
                 />
               </Grid>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
-               {process ?  <Button  type="submit" onClick={(e)=>handleChangeProcess(e,formik.values)} variant="contained" color="primary">
-                 ویرایش
-                </Button>: <Button  type="submit" variant="contained" color="primary">
-                  ثبت
-                </Button>}
+                {process.selectedProcess ? (
+                  <Button
+                    type="submit"
+                    onClick={(e) => handleChangeProcess(e, formik.values)}
+                    variant="contained"
+                    color="primary"
+                  >
+                    ویرایش
+                  </Button>
+                ) : (
+                  <Button type="submit" variant="contained" color="primary">
+                    ثبت
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Box>
