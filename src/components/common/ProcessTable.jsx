@@ -81,7 +81,7 @@ export default function ProcessTable({rows,columns,name,handleDelete,handleEdit}
               { row.manager && <StyledTableCell align="center">{row.manager }</StyledTableCell>}          
               { row.controll && <StyledTableCell align="center">{row.controll }</StyledTableCell>}          
               <StyledTableCell align="center"> 
-              <span style={{marginLeft:"10px", color:"green"}} onClick={(e)=>handleEdit(e,row)}><FiEdit style={{fontSize:"1.4rem"}}/></span>
+              <span style={{marginLeft:"10px", color:"green"}} onClick={()=>handleEdit(row.id)}><FiEdit style={{fontSize:"1.4rem"}}/></span>
               <span style={{ color:"red"}} onClick={()=>handleDelete(row.id)}><MdDelete style={{fontSize:"1.4rem"}}/></span>
                </StyledTableCell>            
             

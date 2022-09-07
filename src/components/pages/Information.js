@@ -25,14 +25,16 @@ import {
 } from "react-advance-jalaali-datepicker";
 import CollapsibleTable from "../common/CollapsibleTable";
 import * as Yup from "yup";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import { useProduct, useProductActions } from "../context/ProductProvider";
 import ProcessComponent from "../ProcessComponent";
 import MyAxios from "../myAxios";
 import { constants } from "../../constants";
 import ProcessTable from "../common/ProcessTable";
+import { Navigate } from 'react-router'
 export default function Information() {
- const [alaki ,setAlaki] = useState("")
+  const [reset , setReset] =useState(false);
+ 
   const handleClickEditProduct = async(e,values)=>{
   console.log("i here is handle click product")
   
@@ -45,8 +47,11 @@ export default function Information() {
  console.log("handle click submit")
      
  }
+ let product = useProduct();
+
  
-  const product = useProduct();
+ 
+  
   const ProductDispatcher = useProductActions()
   console.log("productttttttttttttttttttttttttttttttttttt ,, " , product);
 
@@ -60,7 +65,22 @@ export default function Information() {
     startDate: Yup.date().required(" نام مشخصه کنترلی جدید را وارد کنید"),
   });
 
-
+   const resetFormikProduct =()=>{
+    Formik.values.id = null;
+    Formik.values.productName= "";
+    Formik.values.produtionType=  "";
+    Formik.values.partition=  "";
+    Formik.values.batchValue= "";
+    Formik.values.batchNumber=  "";
+    Formik.values.customerName=  "";
+    Formik.values.sayDate="";
+    Formik.values.startDate="";
+   }
+  //  useEffect(()=>{
+  //   if( !localStorage.getItem("newProduct") && !product.product) return <Navigate to="/signin" replace />;
+  //   if(localStorage.getItem("newProduct")) {resetFormikProduct()};
+   
+  //  },[])
 
   const formik = useFormik({
     initialValues: {
@@ -89,14 +109,14 @@ export default function Information() {
     },
   });
 
-  const deleteHandler=(id)=>{
-    ProductDispatcher({type:""})
+  const deleteHandler=( id)=>{
+    ProductDispatcher({type:"DELETE_PROCESS",payload:id});
+    setReset(true)
+
   }
-  const handleEdit = async(e,row)=>{  
-    e.preventDefault()
-    console.log("handleEdit information rowwwwwwwwww : " , row );
-    ProductDispatcher({type:"GET_SELECTED" , payload:row});
-    setAlaki("alaki migi");
+  const EditHandler = (id)=>{   
+     ProductDispatcher({type:"GET_SELECTED" , payload:id});
+   setReset(true)
   }
 
   return (
@@ -110,8 +130,8 @@ export default function Information() {
           <form onSubmit={formik.handleSubmit}>
             <Box className="formContainer">
               <h3 className={styles.title}>
-                {" "}
-                فرم ابلاغ تولید محصول و کنترل حین فرآیند
+               {localStorage.getItem("newProduct")? `فرم ابلاغ تولید محصول و کنترل حین فرآیند ${formik.values.productName}`:` فرم ابلاغ تولید محصول و کنترل حین فرآیند  جدید`}
+               
               </h3>
 
               <Grid container spacing={3}>
@@ -338,7 +358,7 @@ export default function Information() {
               </Grid>
             </Box>
           
-            <ProcessComponent   />
+            <ProcessComponent process={product.selectedProcess} />
             {/* {product.processes.map((item, index) => {
               return <ProcessComponent key={index} process={item} />;
             })} */}
@@ -350,8 +370,10 @@ export default function Information() {
                 columns={["نام عملیات", "مشخصات کنترلی", "نام اپراتور تولید", "نام ایستگاه", "معیار پذیرش ", "نام ماده  " , " مقداراندازه گیری شده", " کد شناسایی" , "زمان شروع ", "زمان پایان","نتیجه","ویرایش"]}
                 rows={product.processes}
                 handleDelete={deleteHandler}
-                handleEdit={handleEdit}
+                handleEdit={EditHandler}
+                reset={reset}
                 name={'actions'}
+                
               /> 
             </Grid>
           </Grid>

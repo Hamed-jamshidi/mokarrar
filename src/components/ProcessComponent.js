@@ -29,12 +29,13 @@ import { useFormik } from "formik";
 import MyAxios from "./myAxios";
 import { useProduct, useProductActions } from "./context/ProductProvider";
 
-export default function ProcessComponent() {
-  const process = useProduct();
+export default function ProcessComponent(selectedProcess, reset) {
+  
+  const {process} =selectedProcess;
 
   console.log(
     "processs in processs component . ..... ",
-    process.selectedProcess
+    process , selectedProcess
   );
   const [productNameList, setProductNameList] = useState([]);
   const [controllerList, setControllerList] = useState([]);
@@ -96,22 +97,45 @@ export default function ProcessComponent() {
     getAllControllerList();
     getAllStationList();
   }, []);
+ 
+ const resetFormikProcess=()=>{
+  formik.values.id = "";
+  formik.values.batchNumber = "";
+  formik.values.actionName = "";
+  formik.values.controllerName = "";
+  formik.values.operatorName = "";
+  formik.values.stationName = "";
+  formik.values.acceptValue = "";
+  formik.values.materialName = "";
+  formik.values.measuredValue ="";
+  formik.values.result = "";
+  formik.values.identifyCode = "";
+  formik.values.startTime ="";
+  formik.values.endTime = "";
+ }
 
-  useEffect(() => {
-    formik.values.id = process.selectedProcess.id;
-    formik.values.batchNumber = process.selectedProcess.batchNumber;
-    formik.values.actionName = process.selectedProcess.actionName;
-    formik.values.controllerName = process.selectedProcess.controllerName;
-    formik.values.operatorName = process.selectedProcess.operatorName;
-    formik.values.stationName = process.selectedProcess.stationName;
-    formik.values.acceptValue = process.selectedProcess.acceptValue;
-    formik.values.materialName = process.selectedProcess.materialName;
-    formik.values.measuredValue = process.selectedProcess.measuredValue;
-    formik.values.result = process.selectedProcess.result;
-    formik.values.identifyCode = process.selectedProcess.identifyCode;
-    formik.values.startTime = process.selectedProcess.startTime;
-    formik.values.endTime = process.selectedProcess.endTime;
-  }, [process.selectedProcess]);
+// useEffect(()=>{
+// resetFormikProcess();
+// },[reset])
+
+
+  useEffect(() => { 
+    console.log('useEffect 1', process)  
+      formik.values.id = process.id;
+      formik.values.batchNumber = process.batchNumber;
+      formik.values.actionName = process.actionName;
+      formik.values.controllerName = process.controllerName;
+      formik.values.operatorName = process.operatorName;
+      formik.values.stationName = process.stationName;
+      formik.values.acceptValue = process.acceptValue;
+      formik.values.materialName = process.materialName;
+      formik.values.measuredValue = process.measuredValue;
+      formik.values.result = process.result;
+      formik.values.identifyCode = process.identifyCode;
+      formik.values.startTime = process.startTime;
+      formik.values.endTime = process.endTime;
+   
+    },[reset]);
 
   console.log("station list ,,,,,,,,,,,,,,,,,,,,,,,,", stationList);
 
@@ -131,20 +155,20 @@ export default function ProcessComponent() {
   });
 
   const formik = useFormik({
-    initialValues: {
-      id: process.selectedProcess.id || null,
-      batchNumber: process.selectedProcess.batchNumber || "",
-      actionName: process.selectedProcess.actionName || "",
-      controllerName: process.selectedProcess.controllerName || "",
-      operatorName: process.selectedProcess.operatorName || "",
-      stationName: process.selectedProcess.stationName || "",
-      acceptValue: process.selectedProcess.acceptValue || "",
-      materialName: process.selectedProcess.materialName || "",
-      measuredValue: process.selectedProcess.measuredValue || "",
-      result: process.selectedProcess.result || false,
-      identifyCode: process.selectedProcess.identifyCode || 0,
-      startTime: process.selectedProcess.startTime || new Date(),
-      endTime: process.selectedProcess.endTime || new Date(),
+    initialValues:{
+      id: process.id && null,
+      batchNumber: process.batchNumber && "",
+      actionName: process.actionName && "",
+      controllerName: process.controllerName && "",
+      operatorName: process.operatorName && "",
+      stationName: process.stationName && "",
+      acceptValue: process.acceptValue && "",
+      materialName: process.materialName && "",
+      measuredValue: process.measuredValue && "",
+      result: process.result && false,
+      identifyCode: process.identifyCode && 0,
+      startTime: process.startTime && new Date(),
+      endTime: process.endTime && new Date(),
     },
     // validationSchema: validationForm,
     onSubmit: (values) => {
@@ -427,7 +451,7 @@ export default function ProcessComponent() {
                 />
               </Grid>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
-                {process.selectedProcess ? (
+                {process ? (
                   <Button
                     type="submit"
                     onClick={(e) => handleChangeProcess(e, formik.values)}

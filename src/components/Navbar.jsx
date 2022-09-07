@@ -4,13 +4,18 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 import Dropdown from './Dropdown';
 import {FaMicroscope} from "react-icons/fa"
+import { useProductActions } from './context/ProductProvider';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [dropdown, setDropdown] = useState(false);
-
+  const productDispatcher = useProductActions()
   const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
+  const closeMobileMenu = () => {
+    setClick(false);
+    productDispatcher({type:"RESET_STATE"});
+    localStorage.setItem("newProduct",true);
+  };
 
   const onMouseEnter = () => {
     if (window.innerWidth < 960) {
