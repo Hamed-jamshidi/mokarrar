@@ -34,6 +34,7 @@ import ProcessTable from "../common/ProcessTable";
 import { Navigate } from 'react-router'
 export default function Information() {
   const [reset , setReset] =useState(false);
+  // const [reset1 , setReset1] =useState(false);
  
   const handleClickEditProduct = async(e,values)=>{
   console.log("i here is handle click product")
@@ -42,7 +43,14 @@ export default function Information() {
   .then((res)=>console.log("update process: " , res))
   .catch((err)=>console.log("err message",err.message))
  }
-
+ const handleChangeProcess = async (e, values) => {
+  e.preventDefault();
+  await MyAxios("eblaghiats/updateProcess", "post", values)
+    .then((res) =>{ ProductDispatcher({type:"UPDATE_PROCESS", payload:values});
+                    console.log('i am in handle change process', values)
+                    setReset(!reset)})
+    .catch((err) => console.log("err message", err.message));
+};
  const handleClickSubmitProduct=(e,values)=>{
  console.log("handle click submit")
      
@@ -111,7 +119,7 @@ export default function Information() {
 
   const deleteHandler=( id)=>{
     ProductDispatcher({type:"DELETE_PROCESS",payload:id});
-    setReset(true)
+    setReset(!reset)
 
   }
   const EditHandler = (id)=>{   
@@ -357,8 +365,9 @@ export default function Information() {
               </Grid>
               </Grid>
             </Box>
-          
-            <ProcessComponent process={product.selectedProcess} />
+                  {console.log("process in information", product)}
+                <ProcessComponent selectedProcess={product.selectedProcess[0]} handleChangeProcess={handleChangeProcess}/>   
+            
             {/* {product.processes.map((item, index) => {
               return <ProcessComponent key={index} process={item} />;
             })} */}
@@ -372,6 +381,7 @@ export default function Information() {
                 handleDelete={deleteHandler}
                 handleEdit={EditHandler}
                 reset={reset}
+                
                 name={'actions'}
                 
               /> 

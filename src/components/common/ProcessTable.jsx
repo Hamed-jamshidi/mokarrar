@@ -40,8 +40,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ProcessTable({rows,columns,name,handleDelete,handleEdit}) {
-  
+export default function ProcessTable({rows,columns,reset,name,handleDelete,handleEdit}) {
+  // const [rows ,setRows]= useState(rows)
   // console.log("table name : " , name)
   // function convertRows(rows, name) {
   //   console.log(" i am in convertrows" , name , rows)  
