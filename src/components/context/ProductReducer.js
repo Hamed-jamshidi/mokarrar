@@ -12,12 +12,19 @@ const ProductReducer = (state, action) => {
       return { ...state, product: action.payload, processes: action.data };
 
     case "RESET_STATE":
-      return state;
+      
+      return {...state ,
+        product :[],
+        processes:[],
+        selectedProcess:[{}]};
+
+    case "RESET_SELECTED":      
+      return {state , selectedProcess:[{}]};
 
     case "UPDATE_PROCESS":
       const  process1 = [...state.processes];
       console.log("action in update process",action)
-      const updatedProcessIndex = process1.findIndex((item)=>item.id === action.payload.id);
+      const updatedProcessIndex = process1.findIndex((item)=>item.id === parseInt(action.payload.id));
     //  console.log('updated process index', updatedProcessIndex)
       console.log('updated process index ', updatedProcessIndex)
       if (updatedProcessIndex >= 0 ){
@@ -25,7 +32,7 @@ const ProductReducer = (state, action) => {
 
       }
       // console.log("updateted process", updatedProcess)
-      return {...state, Processes:process1};
+      return {...state, processes:process1};
 
     case "GET_SELECTED":
       const processes = [...state.processes];

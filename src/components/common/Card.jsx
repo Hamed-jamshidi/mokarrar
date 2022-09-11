@@ -46,8 +46,9 @@ useEffect(()=>{
   
 // handle click Edit fill a product to reducer state
   const handleClickEdit =(product) =>{
-  
+  localStorage.setItem("link", "home")
   productDispatcher({type:"GET_PROCESS",payload:product,data:process});
+  
    
   }
  

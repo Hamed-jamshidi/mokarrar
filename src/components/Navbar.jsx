@@ -13,8 +13,8 @@ function Navbar() {
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => {
     setClick(false);
-    productDispatcher({type:"RESET_STATE"});
-    localStorage.setItem("newProduct",true);
+    // productDispatcher({type:"RESET_STATE"});
+    localStorage.removeItem("link");
   };
 
   const onMouseEnter = () => {

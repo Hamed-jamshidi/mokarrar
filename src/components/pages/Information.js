@@ -33,7 +33,20 @@ import { constants } from "../../constants";
 import ProcessTable from "../common/ProcessTable";
 import { Navigate } from 'react-router'
 export default function Information() {
+  const initialValues = {
+    id:"",
+      productName: "",
+      produtionType:  "",
+      partition:"",
+      batchValue:  "",
+      batchNumber:"",
+      customerName:  "",
+      sayDate:  "",
+      startDate:"",
+  }
+  const [productFormValue , setProductFormValue] = useState(initialValues)
   const [reset , setReset] =useState(false);
+  const [show , setShow] =  useState(false);
   // const [reset1 , setReset1] =useState(false);
  
   const handleClickEditProduct = async(e,values)=>{
@@ -57,6 +70,10 @@ export default function Information() {
  }
  let product = useProduct();
 
+ const handleClickCreateProcess =async(e, values)=>{
+  e.preventDefault();
+  console.log("values in handle click process" , values);
+ }
  
  
   
@@ -84,11 +101,14 @@ export default function Information() {
     Formik.values.sayDate="";
     Formik.values.startDate="";
    }
-  //  useEffect(()=>{
-  //   if( !localStorage.getItem("newProduct") && !product.product) return <Navigate to="/signin" replace />;
-  //   if(localStorage.getItem("newProduct")) {resetFormikProduct()};
+   useEffect(()=>{
+  if(localStorage.getItem("link") !== "home")
+   ProductDispatcher({type:"RESET_STATE"});
+   if(product.product.id)setProductFormValue({
+
+   })
    
-  //  },[])
+   },[])
 
   const formik = useFormik({
     initialValues: {
@@ -362,11 +382,17 @@ export default function Information() {
                 </Button>: <Button  type="submit" variant="contained" color="primary">
                   ثبت
                 </Button>}
+                <div className="creator">
+                <Button style={{marginRight:"20px"}}  onClick={()=>setShow(true)} variant="contained" color="secoundary">
+                 ایجاد فرایند جدید
+                </Button>
+                </div>
+               
               </Grid>
               </Grid>
             </Box>
-                  {console.log("process in information", product)}
-                <ProcessComponent selectedProcess={product.selectedProcess[0]} handleChangeProcess={handleChangeProcess}/>   
+                 
+               {(show || Object.keys(product.selectedProcess[0]).length !== 0)  && <ProcessComponent selectedProcess={product.selectedProcess[0]}  handleChangeProcess={handleChangeProcess}/>   }
             
             {/* {product.processes.map((item, index) => {
               return <ProcessComponent key={index} process={item} />;
