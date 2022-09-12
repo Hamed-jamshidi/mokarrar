@@ -73,7 +73,7 @@ export default function ProcessTable({rows,columns,reset,name,handleDelete,handl
               <StyledTableCell align="center">{row.stationName}</StyledTableCell>  
               <StyledTableCell align="center">{row.measuredValue}</StyledTableCell>
               <StyledTableCell align="center">{row.materialName}</StyledTableCell>  
-              <StyledTableCell align="center">{row.measuredValue}</StyledTableCell>
+              <StyledTableCell align="center">{row.acceptValue}</StyledTableCell>
               <StyledTableCell align="center">{row.identifyCode}</StyledTableCell>  
               <StyledTableCell align="center">{row.startTime}</StyledTableCell>
               <StyledTableCell align="center">{row.endTime}</StyledTableCell>  

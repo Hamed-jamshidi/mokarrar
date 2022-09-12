@@ -47,6 +47,7 @@ export default function Information() {
   const [productFormValue , setProductFormValue] = useState(initialValues)
   const [reset , setReset] =useState(false);
   const [show , setShow] =  useState(false);
+  const [newProcess , setNewProcess] = useState(false);
   // const [reset1 , setReset1] =useState(false);
  
   const handleClickEditProduct = async(e,values)=>{
@@ -57,7 +58,9 @@ export default function Information() {
   .catch((err)=>console.log("err message",err.message))
  }
  const handleChangeProcess = async (e, values) => {
-  e.preventDefault();
+   e.preventDefault();
+  console.log("handle change process", values)
+ 
   await MyAxios("eblaghiats/updateProcess", "post", values)
     .then((res) =>{ ProductDispatcher({type:"UPDATE_PROCESS", payload:values});
                     console.log('i am in handle change process', values)
@@ -75,7 +78,16 @@ export default function Information() {
   console.log("values in handle click process" , values);
  }
  
+ const handleNewProcess = () =>{
  
+  setShow(!show);
+  setShow(true);
+  setNewProcess(!newProcess)
+  setNewProcess(true)
+  console.log("handleprocess")
+  ProductDispatcher({type:"RESET_SELECTED"});
+
+ }
   
   const ProductDispatcher = useProductActions()
   console.log("productttttttttttttttttttttttttttttttttttt ,, " , product);
@@ -140,9 +152,10 @@ export default function Information() {
   const deleteHandler=( id)=>{
     ProductDispatcher({type:"DELETE_PROCESS",payload:id});
     setReset(!reset)
-
   }
-  const EditHandler = (id)=>{   
+
+  const EditHandler = (id) => {   
+    setNewProcess(false)
      ProductDispatcher({type:"GET_SELECTED" , payload:id});
    setReset(true)
   }
@@ -331,7 +344,7 @@ export default function Information() {
                     }
                   />
                 </Grid>
-
+          
                 <Grid className={styles.holder} item md={4} xs={12} sm={6}>
                   <span className={styles.titleInput}>تاریخ ابلاغ تولید</span>
                   <DatePicker
@@ -383,16 +396,17 @@ export default function Information() {
                   ثبت
                 </Button>}
                 <div className="creator">
-                <Button style={{marginRight:"20px"}}  onClick={()=>setShow(true)} variant="contained" color="secoundary">
+                <Button style={{marginRight:"20px"}}  onClick={()=>handleNewProcess()} variant="contained" color="secoundary">
                  ایجاد فرایند جدید
                 </Button>
                 </div>
                
               </Grid>
               </Grid>
+             
             </Box>
                  
-               {(show || Object.keys(product.selectedProcess[0]).length !== 0)  && <ProcessComponent selectedProcess={product.selectedProcess[0]}  handleChangeProcess={handleChangeProcess}/>   }
+               {(show || Object.keys(product.selectedProcess[0]).length !== 0)  && <ProcessComponent selectedProcess={product.selectedProcess[0]} newProcess={newProcess} handleChangeProcess={handleChangeProcess}/>   }
             
             {/* {product.processes.map((item, index) => {
               return <ProcessComponent key={index} process={item} />;

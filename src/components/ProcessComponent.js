@@ -28,15 +28,22 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import MyAxios from "./myAxios";
 import { useProduct, useProductActions } from "./context/ProductProvider";
+import { SettingsPhoneTwoTone } from "@material-ui/icons";
 
-export default function ProcessComponent({handleChangeProcess,selectedProcess}) {
+export default function ProcessComponent({handleChangeProcess,selectedProcess,newProcess}) {
+  const product = useProduct();
+  console.log("handleprocess")
+  const [processId ,setProcessId] = useState('');
   const [process , setProcess] =useState({})
-  console.log("selected process in process component",selectedProcess)
-  if(selectedProcess.id && Object.entries(process).length === 0) {setProcess(selectedProcess);
+  console.log("selected process in process component",selectedProcess , newProcess)
+  if(Object.keys(selectedProcess).length !== 0 && (Object.entries(process).length === 0 || processId !== selectedProcess.id) ) {
+    setProcess(selectedProcess);
+    setProcessId(selectedProcess.id);
   console.log("selected process in process component2" , process)
   }
+ 
  const  initialValues={
-  id:  null,
+  id: null,
   batchNumber:  "",
   actionName:"",
   controllerName:"",
@@ -50,14 +57,23 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess}) 
   startTime: new Date(),
   endTime: new Date()
 };
-  const productDispatcher = useProductActions()
+
+  const productDispatcher = useProductActions();
   const [productNameList, setProductNameList] = useState([]);
   const [controllerList, setControllerList] = useState([]);
   const [stationList, setStatioList] = useState([]);
   const [actionTypeName, setActionTypeName] = useState([]);
   const [formValue , setFormValue]= useState(initialValues);
  
-
+ useEffect(()=>{
+  console.log("new process is :" , newProcess)
+   //change the form of process form for create new process
+   if(newProcess){
+    console.log("handleprocess")
+    formik.setValues(initialValues) 
+  }
+ 
+ },[newProcess])
   //get all productname list
   const getAllProductNameList = async () => {
     await MyAxios("materials/allMaterials")
@@ -101,85 +117,45 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess}) 
   };
 
   useEffect(() => {
-    // let product = useProduct();
-    // let process = product.selectedProcess[0]
-
-    
-    getAllProductNameList();
+   getAllProductNameList();
     getAllActionList();
     getAllControllerList();
     getAllStationList();
   }, []);
  
- const resetFormikProcess=()=>{
-  formik.values.id = "";
-  formik.values.batchNumber = "";
-  formik.values.actionName = "";
-  formik.values.controllerName = "";
-  formik.values.operatorName = "";
-  formik.values.stationName = "";
-  formik.values.acceptValue = "";
-  formik.values.materialName = "";
-  formik.values.measuredValue ="";
-  formik.values.result = "";
-  formik.values.identifyCode = "";
-  formik.values.startTime ="";
-  formik.values.endTime = "";
- }
 
-// useEffect(()=>{
-// resetFormikProcess();
-// },[reset])
+
 
 
   useEffect(() => {
-    // let {process} =selectedProcess;
-    // if(process[0]) process = process[0];
-    // console.log(
-    //   "processs in processs component",
-    //   process , selectedProcess
-    // );
+   const valueProcess = {
+    id: process.id,
+    batchNumber: process.batchNumber,
+    actionName: process.actionName,
+    controllerName: process.controllerName,
+    operatorName: process.operatorName,
+    stationName: process.stationName,
+    acceptValue: process.acceptValue,
+    materialName: process.materialName,
+    measuredValue: process.measuredValue,
+    result: process.result,
+    identifyCode: process.identifyCode,
+    startTime: process.startTime,
+    endTime: process.endTime,
+  }
     if(process.id){
-      setFormValue( {
-        id: process.id,
-        batchNumber: process.batchNumber,
-        actionName: process.actionName,
-        controllerName: process.controllerName,
-        operatorName: process.operatorName,
-        stationName: process.stationName,
-        acceptValue: process.acceptValue,
-        materialName: process.materialName,
-        measuredValue: process.measuredValue,
-        result: process.result,
-        identifyCode: process.identifyCode,
-        startTime: process.startTime,
-        endTime: process.endTime,
-      })
+      setFormValue( valueProcess)
     }
-    console.log('useEffect 1', process)  
-      formik.values.id = process.id;
-      formik.values.batchNumber = process.batchNumber;
-      formik.values.actionName = process.actionName;
-      formik.values.controllerName = process.controllerName;
-      formik.values.operatorName = process.operatorName;
-      formik.values.stationName = process.stationName;
-      formik.values.acceptValue = process.acceptValue;
-      formik.values.materialName = process.materialName;
-      formik.values.measuredValue = process.measuredValue;
-      formik.values.result = process.result;
-      formik.values.identifyCode = process.identifyCode;
-      formik.values.startTime = process.startTime;
-      formik.values.endTime = process.endTime;
-   
-    },[process]);
+    if(selectedProcess.id){
+      formik.setValues(valueProcess);
+    }
+  },[process,selectedProcess]);
 
   console.log("station list ,,,,,,,,,,,,,,,,,,,,,,,,", stationList);
 
   const validationForm = Yup.object().shape({
     actionName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
-    controllerName: Yup.string().required(
-      " نام مشخصه کنترلی جدید را وارد کنید"
-    ),
+    controllerName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     operatorName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     stationName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
     acceptValue: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
@@ -192,10 +168,27 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess}) 
 
   const formik = useFormik({
     initialValues:  formValue || initialValues  ,
+    enableReinitialize : true,
     // validationSchema: validationForm,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+     //submit a new process
+    //  "batchNumber":"batch2",
+    //     "actionName":"hamed",
+    //     "controllerName":"hamed",
+    //     "operatorName":"hamed",
+    //     "stationName":"hamed",
+    //     "acceptValue":"hamed",
+    //     "result":false,
+    //     "materialName":"hamed",
+    //     "measuredValue":1330,
+    //     "identifyCode":"hamed",
+    //     "startTime":"12:30",
+    //     "endTime":"15:30"
+      await MyAxios("eblaghiats/newProcess" ,"post",{...values,batchNumber:product.product.batchNumber})
+      .then((res)=>{productDispatcher({type:"ADD_PROCESS" ,payload:res.data.data})})
+      .catch((err)=>{console.log(err.message)})
     },
+    
     
   });
 
@@ -474,7 +467,7 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess}) 
                 />
               </Grid>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
-                {process ? (
+                {!newProcess ? (
                   <Button                    
                     onClick={(e) => handleChangeProcess(e, formik.values)}
                     variant="contained"
@@ -483,7 +476,11 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess}) 
                     ویرایش
                   </Button>
                 ) : (
-                  <Button type="submit" variant="contained" color="primary">
+                  <Button
+                 
+                  type="submit" 
+                   variant="contained" 
+                   color="primary">
                     ثبت
                   </Button>
                 )}
