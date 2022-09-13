@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useDebugValue, useEffect, useState } from "react";
-
+import ColumnName from "./common/ColumnName";
 import "./pages/Home.css";
 import styles from "./pages/Information.module.css";
 import { RadioGroup, Radio } from "react-radio-group";
@@ -31,11 +31,13 @@ import { useProduct, useProductActions } from "./context/ProductProvider";
 import { SettingsPhoneTwoTone } from "@material-ui/icons";
 
 export default function ProcessComponent({handleChangeProcess,selectedProcess,newProcess}) {
+const {productName, stationName, controllerName ,actionName} = ColumnName();
+console.log("zart",productName , actionName , controllerName , stationName  )
   const product = useProduct();
   console.log("handleprocess")
   const [processId ,setProcessId] = useState('');
   const [process , setProcess] =useState({})
-  console.log("selected process in process component",selectedProcess , newProcess)
+  console.log("selected process in process component",selectedProcess , newProcess);
   if(Object.keys(selectedProcess).length !== 0 && (Object.entries(process).length === 0 || processId !== selectedProcess.id) ) {
     setProcess(selectedProcess);
     setProcessId(selectedProcess.id);
@@ -75,53 +77,51 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
  
  },[newProcess])
   //get all productname list
-  const getAllProductNameList = async () => {
-    await MyAxios("materials/allMaterials")
-      .then((res) => {
-        setProductNameList(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
+  // const getAllProductNameList = async () => {
+  //   await MyAxios("materials/allMaterials")
+  //     .then((res) => {
+  //       setProductNameList(res.data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
 
-  //get all station list
-  const getAllStationList = async () => {
-    await MyAxios("stations/allStations")
-      .then((res) => {
-        setStatioList(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
-  //get all Controller list
-  const getAllControllerList = async () => {
-    await MyAxios("controls/allControls")
-      .then((res) => {
-        setControllerList(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
-  //get all actions list
-  const getAllActionList = async () => {
-    await MyAxios("missions/allMissions")
-      .then((res) => {
-        setActionTypeName(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
+  // //get all station list
+  // const getAllStationList = async () => {
+  //   await MyAxios("stations/allStations")
+  //     .then((res) => {
+  //       setStatioList(res.data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
+  // //get all Controller list
+  // const getAllControllerList = async () => {
+  //   await MyAxios("controls/allControls")
+  //     .then((res) => {
+  //       setControllerList(res.data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
+  // //get all actions list
+  // const getAllActionList = async () => {
+  //   await MyAxios("missions/allMissions")
+  //     .then((res) => {
+  //       setActionTypeName(res.data.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
 
-  useEffect(() => {
-   getAllProductNameList();
-    getAllActionList();
-    getAllControllerList();
-    getAllStationList();
-  }, []);
+  // useEffect(() =>{
+    
+  //   console.log("test clumn name : " , columns)
+  // }, []);
  
 
 
@@ -150,8 +150,12 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
       formik.setValues(valueProcess);
     }
   },[process,selectedProcess]);
+const actionNameByCode =(searchArray , id)=>{
+  const resultObj = searchArray.find((item)=>item.missionCode == id);
+  if(resultObj)  return (resultObj.missionName);
+  else return;
+}
 
-  console.log("station list ,,,,,,,,,,,,,,,,,,,,,,,,", stationList);
 
   const validationForm = Yup.object().shape({
     actionName: Yup.string().required(" نام مشخصه کنترلی جدید را وارد کنید"),
@@ -199,8 +203,7 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
         <form onSubmit={formik.handleSubmit}>
           <Box className="formContainer">
           <h3 className={styles.title}>
-                {" "}
-                فرایند {formik.values.actionName}
+                فرایند {actionNameByCode(actionName, formik.values.actionName)}
               </h3>
             <Grid container spacing={3}>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
@@ -224,7 +227,7 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
                     formik.touched.actionName && formik.errors.actionName
                   }
                 >
-                  {actionTypeName.map((item, index) => {
+                  {actionName.map((item, index) => {
                     return (
                       <option key={index} value={item.missionCode}>
                         {" "}
@@ -258,7 +261,7 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
                     formik.errors.controllerName
                   }
                 >
-                  {controllerList.map((item, index) => {
+                  {controllerName.map((item, index) => {
                     return (
                       <option key={index} value={item.controlCode}>
                         {item.controlName}
@@ -313,7 +316,7 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
                     formik.touched.stationName && formik.errors.stationName
                   }
                 >
-                  {stationList.map((item, index) => {
+                  {stationName.map((item, index) => {
                     return (
                       <option key={index} value={item.stationCode}>
                         {item.stationName}
@@ -370,7 +373,7 @@ export default function ProcessComponent({handleChangeProcess,selectedProcess,ne
                     formik.touched.materialName && formik.errors.materialName
                   }
                 >
-                  {productNameList.map((item, index) => {
+                  {productName.map((item, index) => {
                     return (
                       <option key={index} value={item.materialCode}>
                         {" "}

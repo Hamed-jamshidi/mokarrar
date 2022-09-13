@@ -11,10 +11,16 @@ function Navbar() {
   const [dropdown, setDropdown] = useState(false);
   const productDispatcher = useProductActions()
   const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => {
+  const closeMobileMenu = (newType) => {
     setClick(false);
-    // productDispatcher({type:"RESET_STATE"});
-    localStorage.removeItem("link");
+    if(newType ==="new"){
+      productDispatcher({type:"RESET_STATE"});
+      localStorage.removeItem("link");
+    }
+
+    
+  
+      
   };
 
   const onMouseEnter = () => {
@@ -60,7 +66,7 @@ function Navbar() {
           </li>
 
           <li className='nav-item'>
-            <Link to='/information' className='nav-links' onClick={closeMobileMenu}>
+            <Link to='/information' className='nav-links' onClick={()=>closeMobileMenu("new")}>
             ثبت اطلاعات
             </Link>
           </li>

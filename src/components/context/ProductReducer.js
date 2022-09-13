@@ -40,17 +40,7 @@ const ProductReducer = (state, action) => {
       const process2 = [...state.processes]
       process2.push(action.payload);
       return {...state , processes:process2};
-    //   const  process1 = [...state.processes];
-    //   console.log("action in update process",action)
-    //   const updatedProcessIndex = process1.findIndex((item)=>item.id === parseInt(action.payload.id));
-    // //  console.log('updated process index', updatedProcessIndex)
-    //   console.log('updated process index ', updatedProcessIndex)
-    //   if (updatedProcessIndex >= 0 ){
-    //     process1[updatedProcessIndex] = action.payload;
 
-    //   }
-    //   // console.log("updateted process", updatedProcess)
-    //   return {...state, processes:process1};
    
     case "GET_SELECTED":
       const processes = [...state.processes];
@@ -67,7 +57,10 @@ const ProductReducer = (state, action) => {
       const process = product.processes.filter(
         (item) => item.id !== parseInt(action.payload)
       );
-      return { ...state, processes: process };
+      // console.log('delete processs ' , product , action.payload)
+      // return { ...state, processes: process };
+      if(product.selectedItem.id === parseInt(action.payload) ) return{...state ,processes:process,selectedItem:[{}]}
+      else return { ...state, processes: process};
 
     case "GET_PARTITION":
       return { ...state, partition: action.partition };
