@@ -1,25 +1,25 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import MyAxios from "../myAxios";
-const ColumnName = () => {
+const ColumnNameByCode = () => {
     const [productName , setProductName] = useState([]);
     const [stationName ,setStationName] = useState([]);
     const [controllerName ,setControllerName]= useState([]);
-    const [actionName , setActionName] = useState([]);
-   
+    const [ actionName , setActionName] = useState([]);
+ 
     useEffect(()=>{
-        getAllProductNameList ();
-        getAllStationList();
-        getAllControllerList();
-        getAllActionList();
+        getProductNameByCode ();
+        getStationByCode();
+        getControllerByCode ();
+        getActionByCode();
 
     },[])
     
    
 
 // get all product list
-const getAllProductNameList = async () => {
-    await MyAxios("materials/allMaterials")
+const getProductNameByCode = async (code) => {
+    await MyAxios(`materials/allMaterials/${code}`)
       .then((res) => {
         setProductName(res.data.data);
         
@@ -30,8 +30,8 @@ const getAllProductNameList = async () => {
   };
 
   //get all station list
-  const getAllStationList = async () => {
-    await MyAxios("stations/allStations")
+  const getAllStationList = async (code) => {
+    await MyAxios(`stations/allStations/${code}`)
       .then((res) => {
         setStationName(res.data.data);
       })
@@ -41,8 +41,8 @@ const getAllProductNameList = async () => {
   };
 
   //get all Controller list
-  const getAllControllerList = async () => {
-    await MyAxios("controls/allControls")
+  const getControllerByCode  = async (code) => {
+    await MyAxios(`controls/allControls/${code}`)
       .then((res) => {
         setControllerName(res.data.data);
       })
@@ -52,8 +52,8 @@ const getAllProductNameList = async () => {
   };
 
   //get all actions list
-  const getAllActionList = async () => {
-    await MyAxios("missions/allMissions")
+  const getActionByCode = async (code) => {
+    await MyAxios(`missions/allMissions/${code}`)
       .then((res) => {
         setActionName(res.data.data);
       })
@@ -64,4 +64,4 @@ const getAllProductNameList = async () => {
   return ({"productName" : productName , "stationName":stationName , "controllerName":controllerName ,"actionName":actionName });
 }
  
-export default ColumnName;
+export default ColumnNameByCode;

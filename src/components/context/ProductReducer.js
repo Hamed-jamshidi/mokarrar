@@ -55,12 +55,16 @@ const ProductReducer = (state, action) => {
       deleteProcess(action.payload);
       const product = { ...state };
       const process = product.processes.filter(
-        (item) => item.id !== parseInt(action.payload)
+        (item) => item.id !== parseInt(action.payload)       
       );
-      // console.log('delete processs ' , product , action.payload)
-      // return { ...state, processes: process };
-      if(product.selectedItem.id === parseInt(action.payload) ) return{...state ,processes:process,selectedItem:[{}]}
-      else return { ...state, processes: process};
+
+      console.log("process in delete process" , process);      
+      console.log("product in delete process" , product);  
+      
+      if(product.selectedItem && (product.selectedItem).length > 0 && product.selectedItem.id === parseInt(action.payload) ) return{...state ,processes:process,selectedItem:[{}]}
+  
+      else return { ...state, processes: process};  
+     
 
     case "GET_PARTITION":
       return { ...state, partition: action.partition };

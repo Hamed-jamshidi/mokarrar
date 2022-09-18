@@ -32,17 +32,16 @@ import { SettingsPhoneTwoTone } from "@material-ui/icons";
 
 export default function ProcessComponent({handleChangeProcess,selectedProcess,newProcess}) {
 const {productName, stationName, controllerName ,actionName} = ColumnName();
-console.log("zart",productName , actionName , controllerName , stationName  )
+console.log("zart", productName , actionName , controllerName , stationName );
   const product = useProduct();
-  console.log("handleprocess")
+  console.log("handleprocess");
   const [processId ,setProcessId] = useState('');
   const [process , setProcess] =useState({})
   console.log("selected process in process component",selectedProcess , newProcess);
   if(Object.keys(selectedProcess).length !== 0 && (Object.entries(process).length === 0 || processId !== selectedProcess.id) ) {
     setProcess(selectedProcess);
     setProcessId(selectedProcess.id);
-  console.log("selected process in process component2" , process)
-  }
+  console.log("selected process in process component2" , process)}
  
  const  initialValues={
   id: null,

@@ -32,6 +32,7 @@ import MyAxios from "../myAxios";
 import { constants } from "../../constants";
 import ProcessTable from "../common/ProcessTable";
 import { Navigate } from 'react-router'
+import ColumnName from "../common/ColumnName";
 export default function Information() {
   const initialValues = {
     id:"",
@@ -48,7 +49,9 @@ export default function Information() {
   const [reset , setReset] =useState(false);
   const [show , setShow] =  useState(false);
   const [newProcess , setNewProcess] = useState(false);
-  // const [reset1 , setReset1] =useState(false);
+  const {productName, stationName, controllerName, actionName} = ColumnName();
+ 
+  //const [reset1 , setReset1] =useState(false);
  
   const handleClickEditProduct = async(e,values)=>{
   console.log("i here is handle click product")
@@ -108,8 +111,8 @@ export default function Information() {
     Formik.values.produtionType=  "";
     Formik.values.partition=  "";
     Formik.values.batchValue= "";
-    Formik.values.batchNumber=  "";
-    Formik.values.customerName=  "";
+    Formik.values.batchNumber= "";
+    Formik.values.customerName= "";
     Formik.values.sayDate="";
     Formik.values.startDate="";
    }
@@ -418,6 +421,7 @@ export default function Information() {
                <ProcessTable
                 columns={["نام عملیات", "مشخصات کنترلی", "نام اپراتور تولید", "نام ایستگاه", "معیار پذیرش ", "نام ماده  " , " مقداراندازه گیری شده", " کد شناسایی" , "زمان شروع ", "زمان پایان","نتیجه","ویرایش"]}
                 rows={product.processes}
+                columnNames = {[productName, stationName, controllerName, actionName]}
                 handleDelete={deleteHandler}
                 handleEdit={EditHandler}
                 reset={reset}
