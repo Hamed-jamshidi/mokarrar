@@ -56,10 +56,11 @@ export default function ProcessTable({rows,columns,columnNames,reset,name,handle
   
   // const changeRows = convertRows(rows, name);
   // console.log("change rows : ", changeRows);
+  console.log("column names is : ",columnNames)
   const classes = useStyles();
   const [productName, stationName, controllerName, actionName] = columnNames;
-  productName.
-  console.log("this is varlist  in processList", columnNames);
+ console.log("productName , stationName , controllerName , actionName", productName, stationName, controllerName, actionName);
+ 
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} npm aria-label="customized table">
@@ -71,7 +72,7 @@ export default function ProcessTable({rows,columns,columnNames,reset,name,handle
         <TableBody>
           {rows.map((row,index) => (
               <StyledTableRow key={row.id}>
-              <StyledTableCell align="center">{actionName.filter((item)=>{if(item === item )}}</StyledTableCell>
+              <StyledTableCell align="center">{}</StyledTableCell>
               <StyledTableCell align="center">{controllerName[row.controllerName]}</StyledTableCell>  
               <StyledTableCell align="center">{row.operatorName}</StyledTableCell>
               <StyledTableCell align="center">{stationName[row.stationName]}</StyledTableCell>  
@@ -87,9 +88,8 @@ export default function ProcessTable({rows,columns,columnNames,reset,name,handle
               <StyledTableCell align="center"> 
               <span style={{marginLeft:"10px", color:"green"}} onClick={()=>handleEdit(row.id)}><FiEdit style={{fontSize:"1.4rem"}}/></span>
               <span style={{ color:"red"}} onClick={()=>handleDelete(row.id)}><MdDelete style={{fontSize:"1.4rem"}}/></span>
-               </StyledTableCell>            
-            
-            </StyledTableRow>
+              </StyledTableCell> 
+           </StyledTableRow>
           ))}
         </TableBody>
       </Table>

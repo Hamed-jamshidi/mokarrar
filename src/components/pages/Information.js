@@ -424,8 +424,7 @@ export default function Information() {
                 columnNames = {[productName, stationName, controllerName, actionName]}
                 handleDelete={deleteHandler}
                 handleEdit={EditHandler}
-                reset={reset}
-                
+                reset={reset}                
                 name={'actions'}
                 
               /> 
