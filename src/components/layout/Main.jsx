@@ -23,7 +23,7 @@ function Main(){
       <Route path='/signin'  element={<Signup/>} />
       
   <Route element={<ProtectedRoute/>}>
-   <Route path='/' exact element={<RegisterUser/>} />
+   <Route path='/' exact element={<Home/>} />
    <Route path='/controllers'  element={<Controllers/>} />
    <Route path='/information' element={<Information/>} />
    <Route path='/materials' element={<Materials/>} />

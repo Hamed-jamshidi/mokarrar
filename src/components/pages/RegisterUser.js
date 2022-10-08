@@ -58,12 +58,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RegisterUser() {
   const [error , setError] = useState("");
+  const [errorMessage , setErrorMessage] = useState("");
   const [successMessage , setSuccessMessage] = useState("")
   const ProductDispatcher = useProductActions()
   const classes = useStyles();
   const validationForm = Yup.object().shape({
     userName: Yup.string().required("نام کاربری را وارد کنید  "),
-    password: Yup.string().required(" رمز عبور را وارد کنید"),
+    password:Yup.string().required('No password provided.') 
+    .min(8, 'Password is too short - should be 8 chars minimum.')
+    .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
     firstName: Yup.string().required(" نام  را وارد کنید  "),
     lastName: Yup.string().required(" نام خانوادگی را وارد کنید"),
     partition:Yup.number().required(" نام واحد  را وارد کنید"),
@@ -83,10 +86,12 @@ export default function RegisterUser() {
       await MyAxios("user/register" , "post" , values )
       .then((response) =>{
         setSuccessMessage("کاربر جدید با موفقیت ایجاد گردید");
-      setError ("");
+        setErrorMessage ("");
       // ProductDispatcher({type:"GET_PARTITION", data:response.data.partition});
       // window.location.replace('/'); 
     }).catch((err)=>{console.log(err.message);
+      setSuccessMessage("");
+      setErrorMessage("ثبت کاربر بامشکل مواجه گردید")
     console.log("login failed!")});
     setError("login failed!")
    },
@@ -206,6 +211,8 @@ export default function RegisterUser() {
               <Link href="#" variant="body2">
                قبلا ثبت نام کرده اید  ؟ وارد شوید
               </Link>
+              {errorMessage&&<p style={{color:"red"}}>{errorMessage}</p>}
+              {successMessage&&<p style={{color:"green"}}>{successMessage}</p>}
             </Grid>
           </Grid>
         </form>
