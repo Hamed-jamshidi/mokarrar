@@ -1,217 +1,218 @@
-import React, { useState } from 'react'
-import { Navigate } from 'react-router'
-import * as yup from 'yup'
-import MyAxios from '../../components/myAxios'
+import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import MyAxios from "../myAxios";
+import { useState } from "react";
+import { useProductActions } from "../context/ProductProvider";
 
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import FormControl from '@material-ui/core/FormControl';
+import { Select } from '@material-ui/core';
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="">
+      
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 export default function RegisterUser() {
-  const [firstname, setFirstname] = useState('')
-  const [lastname, setLastname] = useState('')
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
-  const [success, setSuccess] = useState('')
-  const [errors, setError] = useState([])
+  const [error , setError] = useState("");
+  const [successMessage , setSuccessMessage] = useState("")
+  const ProductDispatcher = useProductActions()
+  const classes = useStyles();
+  const validationForm = Yup.object().shape({
+    userName: Yup.string().required("نام کاربری را وارد کنید  "),
+    password: Yup.string().required(" رمز عبور را وارد کنید"),
+    firstName: Yup.string().required(" نام  را وارد کنید  "),
+    lastName: Yup.string().required(" نام خانوادگی را وارد کنید"),
+    partition:Yup.number().required(" نام واحد  را وارد کنید"),
 
-  const handleClick = async (event) => {
-    console.log('handleClick')
-    event.preventDefault()
-    setMessage('')
-    setError('')
-    doSubmit()
-  }
-  const schema = yup.object().shape({    
-    email: yup
-      .string()
-      .email('آدرس ایمیل شما صحیح وارد نشده است!')
-      .required('لطفا آدرس ایمیل خود را وارد نمایید!'),
-    password: yup.string().min(8, 'رمز عبور شما حداقل باید 8 حرف باشد!'),
-  })
+  });
+ 
+  const formik = useFormik({
+    initialValues: {
+      userName: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      partition:""
+    },
+    validationSchema: validationForm,
+    onSubmit:async(values) => {
+      await MyAxios("user/register" , "post" , values )
+      .then((response) =>{
+        setSuccessMessage("کاربر جدید با موفقیت ایجاد گردید");
+      setError ("");
+      // ProductDispatcher({type:"GET_PARTITION", data:response.data.partition});
+      // window.location.replace('/'); 
+    }).catch((err)=>{console.log(err.message);
+    console.log("login failed!")});
+    setError("login failed!")
+   },
+  });
 
-  const validate = async () => {
-    try {
-      const result = await schema.validate(
-        { email, password },
-        { abortEarly: false },
-      )
-
-      return result
-    } catch (error) {
-      setError(error.errors)
-    }
-  }
-  const doSubmit = async () => {
-    setSuccess('');
-    console.log('dosubmit')
-    const result = await validate()
-    console.log('validate')
-    const signup = {
-      firstname: firstname,
-      lastname: lastname,
-      username: username,
-      email: result.email,
-      password: result.password,
-      isadmin:false,
-    }
-    console.log('errors' , errors)
-    if (errors.length === 0) {
-      const currentUrl = 'auth/register'
-      const response = await MyAxios(currentUrl, 'post', signup)
-      console.log('response ', response)
-      setSuccess(response.data.data.success)
-      if (success === false) {
-        setMessage(response.data.error_message)
-      } else {
-        setMessage('حساب کاربری شما ایجاد شد .لطفا وارد شوید')
-      }
-    }
-    // if (success)
-    //   setTimeout(() => {
-    //    <Navigate to="/" replace/>
-    //   }, 3000)
-  }
   return (
-    <section class="vh-100" style={{ backgroundColor: '#eee' }}>
-      <div class="container h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-lg-12 col-xl-11">
-            <div class="card text-black" style={{ borderRadius: '25px' }}>
-              <div class="card-body p-md-5">
-                <div class="row justify-content-center">
-                  <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-                    <img
-                      src="./images/hero_datamoon_new14.png"
-                      class="img-fluid"
-                      alt="Datamoon"
-                    />
-                  </div>
-                  <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                    <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
-                      ثبت نام
-                    </p>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+         ثبت کاربر جدید
+        </Typography>
+        <form className={classes.form} onSubmit={formik.handleSubmit} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="fname"
+                name="firstName"
+                variant="outlined"
+                required
+                fullWidth
+                id="firstName"
+                label="نام"
+                onChange={formik.handleChange}
+                value={formik.values.firstName}
+                autoFocus
+                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                helperText={formik.touched.firstName && formik.errors.firstName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastName"
+                label="نام خانوادگی"
+                onChange={formik.handleChange}
+                value={formik.values.lastName}
+                name="lastName"
+                autoComplete="lname"
+                error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                helperText={formik.touched.lastName && formik.errors.lastName}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="userName"
+                label="نام کاربری"
+                onChange={formik.handleChange}
+                value={formik.values.userName}
+                name="userName"
+                autoComplete="userName"
+                error={formik.touched.userName && Boolean(formik.errors.userName)}
+              helperText={formik.touched.userName && formik.errors.userName}
+              />
+            </Grid>
+           
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="رمز عبور"
+                onChange={formik.handleChange}
+                value={formik.values.password}
+                type="Password"
+                id="password"
+                autoComplete="current-password"
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                helperText={formik.touched.password && formik.errors.password}
+              />
+            </Grid>
+           
 
-                    <form class="mx-1 mx-md-4">
-                      {errors !== '' &&
-                        errors.map((error, index) => (
-                          <div class="alert alert-danger" role="alert">
-                            {error}
-                          </div>
-                        ))}
-                      {message !== '' &&
-                        (success ? (
-                          <div class="alert alert-success" role="alert">
-                            {message}
-                          </div>
-                        ) : (
-                          <div class="alert alert-danger" role="alert">
-                            {message}
-                          </div>
-                        ))}
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                        <div class="form-group flex-fill col-me-6 mb-0">
-                          <label class="form-label" for="name">
-                            نام
-                          </label>
-                          <input
-                            type="text"
-                            id="name"
-                            class="form-control"
-                            placeholder="نام"
-                            onChange={(e) => setFirstname(e.target.value)}
-                            value={firstname}
-                          />
-                        </div>
-                        <div class="form-group  col-md-6 flex-fill mb-0">
-                          <label class="form-label" for="family">
-                            نام خانوادگی
-                          </label>
-                          <input
-                            type="text"
-                            id="family"
-                            placeholder="نام خانوادگی"
-                            class="form-control"
-                            onChange={(e) => setLastname(e.target.value)}
-                            value={lastname}
-                          />
-                        </div>
-                      </div>
+            <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">واحد</InputLabel>
+        <Select
+          labelId="partition"
+          id="partition"
+          name='partition'
+          value={formik.values.partition}    
+          onChange={formik.handleChange}    
+          label="واحد کاربر"
+          error={formik.touched.partition && Boolean(formik.errors.partition)}
+          helperText={formik.touched.partition && formik.errors.partition}
+        >
+          <MenuItem value="">
+            <em>واحد کاربر </em>
+          </MenuItem>
+          <MenuItem value={1}>پلی اورتان </MenuItem>
+          <MenuItem value={2}>اپوکسی</MenuItem>
+          <MenuItem value={3}>الکید</MenuItem>
+        </Select>
+      </FormControl>
 
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                        <div class="form-group flex-fill mb-0">
-                          <label class="form-label" for="email">
-                            آدرس ایمیل
-                          </label>
-                          <input
-                            type="email"
-                            id="email"
-                            class="form-control engNum"
-                            placeholder="آدرس ایمیل"
-                            onChange={(e) => setEmail(e.target.value)}
-                            value={email}
-                          />
-                        </div>
-                      </div>
 
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                        <div class="form-group flex-fill mb-0">
-                          <label class="form-label" for="username">
-                            نام کاربری
-                          </label>
-                          <input
-                            type="text"
-                            id="username"
-                            class="form-control"
-                            placeholder="نام کاربری"
-                            onChange={(e) => setUsername(e.target.value)}
-                            value={username}
-                          />
-                        </div>
-                      </div>
-
-                      <div class="d-flex flex-row align-items-center mb-4">
-                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
-                        <div class="form-group flex-fill mb-0">
-                          <label class="form-label" for="username">
-                            رمز عبور
-                          </label>
-                          <input
-                            type="password"
-                            id="password"
-                            class="form-control"
-                            placeholder="رمز عبور"
-                            onChange={(e) => setPassword(e.target.value)}
-                            value={password}
-                          />
-                        </div>
-                      </div>
-
-                      <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <button
-                          type="button"
-                          class="btn btn-primary btn-lg"
-                          onClick={(e) => handleClick(e)}
-                        >
-                          ثبت نام
-                        </button>
-                      </div>
-                      <p class="small fw-bold mt-2 pt-1 mb-0">
-                        نام کاربری و رمز عبور دارم؟{' '}
-                        <a href="/signin" class="link-danger">
-                          ورود!
-                        </a>
-                      </p>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+           ثبت نام
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link href="#" variant="body2">
+               قبلا ثبت نام کرده اید  ؟ وارد شوید
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
       </div>
-    </section>
-  )
+      <Box mt={5}>
+      
+      </Box>
+    </Container>
+  );
 }
