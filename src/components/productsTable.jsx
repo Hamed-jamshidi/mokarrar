@@ -40,6 +40,7 @@ function createData(name, calories, fat, carbs, protein, price) {
 
 function Row(props) {
   const { row } = props;
+  console.log("props in function row is : ",props)
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
@@ -51,13 +52,15 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
+        <TableCell align="right" component="th" scope="row">
+          {row.productName}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.partition}</TableCell>
+        <TableCell align="right">{row.customerName}</TableCell>
+        <TableCell align="right">{row.batchNumber}</TableCell>
+        <TableCell align="right">{row.produtionType}</TableCell>
+      
+       
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -70,29 +73,31 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                    
-                    <TableCell>شماره بچ</TableCell>
-                    <TableCell>نام عملیات </TableCell>
-                    <TableCell> نام کنترلر</TableCell>
-                    <TableCell>نام اپراتور </TableCell>
-                    <TableCell>نام ایستگاه </TableCell>
-                    <TableCell>مقدار پذیرفته </TableCell>
-                    <TableCell> مقدار اندازه شده</TableCell>
+                    <TableCell align="right">شماره بچ</TableCell>
+                    <TableCell align="right">نام عملیات </TableCell>
+                    <TableCell align="right"> نام کنترلر</TableCell>
+                    <TableCell align="right">نام اپراتور </TableCell>
+                    <TableCell align="right">نام ایستگاه </TableCell>
+                    <TableCell align="right">مقدار پذیرفته </TableCell>
+                    <TableCell align="right"> مقدار اندازه شده</TableCell>
                   
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
+                   {row.processes.map((ProcessRow) => (
+                    <TableRow key={ProcessRow.id}>
+                      <TableCell  align="right" component="th" scope="row">
+                        {ProcessRow.batchNumber}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
+                      <TableCell  align="right">{ProcessRow.actionName}</TableCell>
+                      <TableCell align="right">{ProcessRow.controllerName}</TableCell>
+                      <TableCell align="right">{ProcessRow.operatorName}</TableCell>
+                      <TableCell align="right">{ProcessRow.stationName}</TableCell>
+                      <TableCell align="right">{ProcessRow.acceptValue}</TableCell>
+                      <TableCell align="right">{ProcessRow.measuredValue}</TableCell>
+                     
                     </TableRow>
-                  ))}
+                  ))} 
                 </TableBody>
               </Table>
             </Box>
@@ -129,7 +134,8 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
 ];
 
-export default function ProductsTable() {
+export default function ProductsTable({products}) {
+    console.log('product in producdt table is : ' , products)
   return (
     <TableContainer component={Paper} style={{marginTop:"50px"}}>
       <Table aria-label="collapsible table">
@@ -147,8 +153,8 @@ export default function ProductsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
+          {products.map((row) => (
+            <Row key={row.id} row={row} />
           ))}
         </TableBody>
       </Table>
