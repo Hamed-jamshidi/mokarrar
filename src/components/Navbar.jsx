@@ -16,11 +16,7 @@ function Navbar() {
     if(newType ==="new"){
       productDispatcher({type:"RESET_STATE"});
       localStorage.removeItem("link");
-    }
-
-    
-  
-      
+    } 
   };
 
   const onMouseEnter = () => {

@@ -21,7 +21,7 @@ function Main(){
       // <ProductProvider>
  <Routes>
       <Route path='/signin'  element={<Signup/>} />
-      
+      <Route path='/register' element={<RegisterUser/>} />
   <Route element={<ProtectedRoute/>}>
    <Route path='/' exact element={<Home/>} />
    <Route path='/controllers'  element={<Controllers/>} />
@@ -33,7 +33,7 @@ function Main(){
    <Route path='/stations' element={<Stations/>} />
    <Route path='/users' element={<Users/>} />
    <Route path='/products' element={<Products/>} />
-   <Route path='/register' element={<RegisterUser/>} />
+   {/* <Route path='/register' element={<RegisterUser/>} /> */}
    <Route path='/*' element={<NotFound/>} />
 
    </Route>
