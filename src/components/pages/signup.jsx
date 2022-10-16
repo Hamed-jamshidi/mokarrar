@@ -3,7 +3,7 @@ import MyAxios from "../myAxios";
 import "./Home.css";
 import * as Yup from "yup";
 import { Navigate } from 'react-router-dom';
-import { ErrorMessage, useFormik } from "formik";
+import { ErrorMessage , useFormik } from "formik";
 import {
   Checkbox,
   Grid,
@@ -28,10 +28,12 @@ const Signup = () => {
     },
     validationSchema: validationForm,
     onSubmit:async(values) => {
+      console.log("onSubmit", values)
       await MyAxios("user/login" , "post" , values )
-      .then((response) =>{localStorage.setItem("token" , response.data.data.token);
+      .then((response) => {localStorage.setItem("token" , response.data.data.token);
       setError ("");
-      ProductDispatcher({type:"GET_PARTITION", data:response.data.partition});
+      console.log("this is onsubmited")
+      ProductDispatcher({type:"GET_PARTITION", data:{partition:response.data.partition , accessLevel:response.data.accessLevel}});
       window.location.replace('/'); 
     }).catch((err)=>{console.log(err.message);
     console.log("login failed!")});

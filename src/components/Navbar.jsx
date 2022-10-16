@@ -34,7 +34,7 @@ function Navbar() {
       setDropdown(false);
     }
   };
-
+  const token = localStorage.getItem("token")
   return (
     <>
       <nav className='navbar'>
@@ -93,11 +93,15 @@ function Navbar() {
               className='nav-links-mobile'
               onClick={closeMobileMenu}
             >
-              ورود / خروج
+            { token? "خروج" : "ورود"}
             </Link>
           </li>
         </ul>
         <Button />
+        <div>
+          <span>{}</span>
+          <span>{}</span>
+        </div>
       </nav>
     </>
   );

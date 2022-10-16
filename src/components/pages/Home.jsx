@@ -69,7 +69,8 @@ export default function Home() {
          <Grid container item xs={12} spacing={3} > 
          <ProductsTable 
          products={completedProduct}   
-        /></Grid>  
+        />
+        </Grid>  
     </div>
   );
 }

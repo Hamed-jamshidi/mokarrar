@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useRef} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -14,6 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import PrintComponent from './common/PrintComponent'
+import {useReactToPrint} from "react-to-print"
+import ComponentToPrint from './ComponentToPrint';
 
 const useRowStyles = makeStyles({
   root: {
@@ -23,22 +26,15 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: '2020-01-05', customerId: '11091700', amount: 3 },
-      { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-    ],
-  };
-}
+
+
 
 function Row(props) {
+  const ComponentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () =>ComponentRef.current,
+  })
+  
   const { row } = props;
   console.log("props in function row is : ",props)
   const [open, setOpen] = React.useState(false);
@@ -59,6 +55,15 @@ function Row(props) {
         <TableCell align="right">{row.customerName}</TableCell>
         <TableCell align="right">{row.batchNumber}</TableCell>
         <TableCell align="right">{row.produtionType}</TableCell>
+        <TableCell align="right">
+         <div style={{display:"none"}}>
+<ComponentToPrint row={row} ref={ComponentRef} />
+         </div>
+         <div>
+          <button onClick={handlePrint}>print</button>
+         </div>
+
+        </TableCell>
       
        
       </TableRow>
@@ -126,15 +131,10 @@ Row.propTypes = {
   }).isRequired,
 };
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-];
+
 
 export default function ProductsTable({products}) {
+ 
     console.log('product in producdt table is : ' , products)
   return (
     <TableContainer component={Paper} style={{marginTop:"50px"}}>

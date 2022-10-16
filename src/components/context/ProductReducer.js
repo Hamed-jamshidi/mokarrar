@@ -67,6 +67,7 @@ const ProductReducer = (state, action) => {
      
 
     case "GET_PARTITION":
+      console.log("action in get Partition is : " )
       return { ...state, partition: action.partition };
   
     default:
