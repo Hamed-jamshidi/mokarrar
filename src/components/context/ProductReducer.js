@@ -68,7 +68,15 @@ const ProductReducer = (state, action) => {
 
     case "GET_PARTITION":
       console.log("action in get Partition is : " )
-      return { ...state, partition: action.partition };
+      const {accessLevel , partition} = action.payload;
+      console.log("get partition" , accessLevel, partition);   
+      localStorage.setItem('getPartitionA',accessLevel);
+      localStorage.setItem('getPartitionP',partition);
+
+      return { ...state, accessLevel:accessLevel };
+
+    case "GET_STATE":      
+      return localStorage.setItem() ;
   
     default:
       return state;

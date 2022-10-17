@@ -11,16 +11,16 @@ const ProductProvider = ({children}) => {
         product :[],
         processes:[],
         selectedProcess:[{}],
-        partition:0
+        partition:0,
+        accessLevel:0 
     };
     const [product , dispatcher] = useReducer(ProductReducer ,initialState);
     return (
-     <productContext.Provider value={product} >
+     <productContext.Provider value={product}>
      <productContextDispatcher.Provider  value={dispatcher}>
      {children}
      </productContextDispatcher.Provider>
      </productContext.Provider>
-
       );
 }
  

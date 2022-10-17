@@ -6,7 +6,7 @@ import ProductCard from '../common/Card';
 import { useEffect } from 'react';
 import MyAxios from '../myAxios';
 import ProductsTable from '../productsTable';
-
+import { useProduct, useProductActions } from '../context/ProductProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const [productsData ,setProductsData]= useState([]);
   const [completedProduct ,setCompletedProduct]= useState([]);
+  const productData = useProduct();
+  console.log("it's a state in Home", productData.accessLevel);
+  // useEffect(()=>{
+  //   const productData = useProduct();
+  // console.log("it's a state in Home", productData);
+  // })
   console.log("compelted products is :" , completedProduct)
   //get all products 
   const getAllProducts=async()=>{

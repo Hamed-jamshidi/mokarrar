@@ -31,9 +31,10 @@ const Signup = () => {
       console.log("onSubmit", values)
       await MyAxios("user/login" , "post" , values )
       .then((response) => {localStorage.setItem("token" , response.data.data.token);
+
       setError ("");
       console.log("this is onsubmited")
-      ProductDispatcher({type:"GET_PARTITION", data:{partition:response.data.partition , accessLevel:response.data.accessLevel}});
+      ProductDispatcher({type:"GET_PARTITION",  payload:response.data.data});
       window.location.replace('/'); 
     }).catch((err)=>{console.log(err.message);
     console.log("login failed!")});

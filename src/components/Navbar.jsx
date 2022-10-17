@@ -4,12 +4,16 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';
 import Dropdown from './Dropdown';
 import {FaMicroscope} from "react-icons/fa"
-import { useProductActions } from './context/ProductProvider';
+import { useProduct, useProductActions } from './context/ProductProvider';
+import { constants } from '../constants';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const productDispatcher = useProductActions()
+  const productData = useProduct();
+  console.log("navbar product data:", productData)
+  
   const handleClick = () => setClick(!click);
   const closeMobileMenu = (newType) => {
     setClick(false);
@@ -56,7 +60,8 @@ function Navbar() {
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              تعریف سیستم <i className='fas fa-caret-down' />
+              تعریف سیستم 
+              <i className='fas fa-caret-down' />
             </Link>
             {dropdown && <Dropdown />}
           </li>
@@ -99,7 +104,7 @@ function Navbar() {
         </ul>
         <Button />
         <div>
-          <span>{}</span>
+          <span>{constants.userType[1]}</span>
           <span>{}</span>
         </div>
       </nav>
