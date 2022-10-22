@@ -209,6 +209,7 @@ const actionNameByCode =(searchArray , id)=>{
                 <span className={styles.titleInput}>نام عملیات</span>
                 <Select
                   className={styles.select}
+                  disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                   native
                   id="actionName"
                   name="actionName"
@@ -243,6 +244,7 @@ const actionNameByCode =(searchArray , id)=>{
                 <Select
                   className={styles.select}
                   native
+                  disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                   id="controllerName"
                   name="controllerName"
                   value={parseInt(formik.values.controllerName)}
@@ -275,6 +277,7 @@ const actionNameByCode =(searchArray , id)=>{
                 <TextField
                   id="operatorName"
                   name="operatorName"
+                  disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                   value={formik.values.operatorName}
                   onChange={formik.handleChange}
                   style={{ margin: 8 }}
@@ -301,6 +304,7 @@ const actionNameByCode =(searchArray , id)=>{
                   native
                   id="stationName"
                   name="stationName"
+                  disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                   value={parseInt(formik.values.stationName)}
                   onChange={formik.handleChange}
                   inputProps={{
@@ -331,6 +335,7 @@ const actionNameByCode =(searchArray , id)=>{
                 <TextField
                   id="acceptValue"
                   name="acceptValue"
+                  disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                   value={formik.values.acceptValue}
                   onChange={formik.handleChange}
                   style={{ margin: 8 }}
@@ -358,6 +363,7 @@ const actionNameByCode =(searchArray , id)=>{
                   native
                   id="materialName"
                   name="materialName"
+                  disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                   value={formik.values.materialName}
                   onChange={formik.handleChange}
                   inputProps={{
@@ -384,7 +390,9 @@ const actionNameByCode =(searchArray , id)=>{
               </Grid>
               <Grid className={styles.holder} item md={4} xs={12} sm={6}>
                 <span className={styles.titleInput}>مقدار اندازه گیری شده</span>
+
                 <TextField
+                disabled={localStorage.getItem("accessLevel") == 2 || localStorage.getItem("accessLevel") == 4 ? false : true}
                   id="measuredValue"
                   name="measuredValue"
                   value={formik.values.measuredValue}
@@ -412,6 +420,7 @@ const actionNameByCode =(searchArray , id)=>{
                   id="identifyCode"
                   name="identifyCode"
                   type="number"
+                  disabled={localStorage.getItem("accessLevel") == 2 || localStorage.getItem("accessLevel") == 4 ? false : true}
                   value={formik.values.identifyCode}
                   onChange={formik.handleChange}
                   style={{ margin: 8 }}
@@ -438,6 +447,7 @@ const actionNameByCode =(searchArray , id)=>{
                   className={styles.dataPicker}
                   id="startTime"
                   name="startTime"
+                  disabled={localStorage.getItem("accessLevel") == 2 || localStorage.getItem("accessLevel") == 4 ? false : true}
                   value={formik.values.startTime}
                   onChange={formik.handleChange}
                   placeholder="انتخاب تاریخ"
@@ -457,6 +467,7 @@ const actionNameByCode =(searchArray , id)=>{
                   className={styles.dataPicker}
                   id="endTime"
                   name="endTime"
+                  disabled={localStorage.getItem("accessLevel") == 2 || localStorage.getItem("accessLevel") == 4 ? false : true}
                   value={formik.values.endTime}
                   onChange={formik.handleChange}
                   placeholder="انتخاب تاریخ"

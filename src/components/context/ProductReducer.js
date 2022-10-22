@@ -70,6 +70,7 @@ const ProductReducer = (state, action) => {
       console.log("action in get Partition is : " )
       const {accessLevel , partition} = action.payload;
       console.log("get partition" , accessLevel, partition);   
+      
       localStorage.setItem('getPartitionA',accessLevel);
       localStorage.setItem('getPartitionP',partition);
 

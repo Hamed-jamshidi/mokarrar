@@ -184,6 +184,7 @@ export default function Information() {
                   <TextField
                     id="productName"
                     name="productName"
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     value={formik.values.productName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
@@ -209,6 +210,7 @@ export default function Information() {
 
                   <Select
                     className={styles.select}
+                    
                     native
                     id="partition"
                     name="partition"
@@ -244,6 +246,7 @@ export default function Information() {
                   <OutlinedInput
                     id="batchValue"
                     name="batchValue"
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     value={formik.values.batchValue}
                     onChange={formik.handleChange}
                     endAdornment={
@@ -268,6 +271,7 @@ export default function Information() {
                   <TextField
                     id="batchNumber"
                     name="batchNumber"
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     value={formik.values.batchNumber}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
@@ -294,6 +298,7 @@ export default function Information() {
 
                   <Select
                     className={styles.select}
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     id="produtionType"
                     name="produtionType"
                     value={parseInt(formik.values.produtionType)}
@@ -328,6 +333,7 @@ export default function Information() {
                   <TextField
                     id="customerName"
                     name="customerName"
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     value={formik.values.customerName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
@@ -352,6 +358,7 @@ export default function Information() {
                   <span className={styles.titleInput}>تاریخ ابلاغ تولید</span>
                   <DatePicker
                     className={styles.dataPicker}
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     type="date"
                     id="sayDate"
                     name="sayDate"
@@ -377,6 +384,7 @@ export default function Information() {
                     className={styles.dataPicker}
                     id="startDate"
                     name="startDate"
+                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
                     value={formik.values.startDate}
                     onChange={formik.handleChange}
                     placeholder="انتخاب تاریخ"
@@ -393,9 +401,10 @@ export default function Information() {
                   />
                 </Grid>
                 <Grid className={styles.holder} item md={4} xs={12} sm={6}>
-               {product ?  <Button  type="submit" onClick={(e)=>handleClickEditProduct(e,formik.values)} variant="contained" color="primary">
+               {product ?  <Button disabled={localStorage.getItem("accessLevel") == 2 ?  false : true 
+              } type="submit" onClick={(e)=>handleClickEditProduct(e,formik.values)} variant="contained" color="primary">
                  ویرایش
-                </Button>: <Button  type="submit" variant="contained" color="primary">
+                </Button>: <Button   type="submit" variant="contained" color="primary">
                   ثبت
                 </Button>}
                 <div className="creator">

@@ -1,0 +1,18 @@
+.logo{
+    width: 20%;
+    height: 70px;
+}
+.printTable{
+    width:90%;
+    margin: 20px 50px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+     
+}
+
+.printTable tr td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: small;
+}

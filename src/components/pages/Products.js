@@ -61,6 +61,7 @@ export default function Products() {
                   <TextField
                     id="newMaterialCode"
                     name="newMaterialCode"
+                    disabled={localStorage.getItem("accessLevel") == 2 ? true : false}
                     value={formik.values.newMaterialCode}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
@@ -109,6 +110,7 @@ export default function Products() {
                   <TextField
                     id="newMatreialName"
                     name="newMatreialName"
+                    disabled={localStorage.getItem("accessLevel") == 2 ? true : false}
                     value={formik.values.newMatreialName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
