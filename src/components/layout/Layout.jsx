@@ -5,7 +5,10 @@ function Layout ({children}){
     return (
         <div>
             <Navbar/>
+            <div style={{marginTop:"20px"}}>
             {children}
+            </div>
+            
         </div>
     )
 }

@@ -57,15 +57,18 @@ export default function Home() {
 
   function FormRow() {
     return (
-      <React.Fragment>
+      
+ <React.Fragment style={{margin:"20px"}}>
         {productsData.map((product)=>{
-            return ( <Grid key={product.id} item md={4} xs={12} sm={6}>
-                <Paper className={classes.paper}><ProductCard key={product.id} product={product}/></Paper>
+            return ( <Grid key={product.id} item md={4} xs={12} sm={6} style={{paddingTop:"-13px" }}>
+                <Paper  className={classes.paper}><ProductCard key={product.id} product={product}/></Paper>
               </Grid>)
         })}
        
        
       </React.Fragment>
+      
+     
     );
   }
 

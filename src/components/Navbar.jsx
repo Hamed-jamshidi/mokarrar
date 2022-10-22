@@ -24,11 +24,12 @@ function Navbar() {
   };
 
   const onMouseEnter = () => {
-    if (window.innerWidth < 960) {
-      setDropdown(false);
-    } else {
-      setDropdown(true);
-    }
+    // if (window.innerWidth < 960) {
+    //   setDropdown(false);
+    // } else {
+    //   setDropdown(true);
+    // }
+    setDropdown(true);
   };
 
   const onMouseLeave = () => {
@@ -78,7 +79,7 @@ function Navbar() {
               className='nav-links'
               onClick={closeMobileMenu}
             >
-              ابزار
+             ابزار
             </Link>
           </li>
 
@@ -104,8 +105,15 @@ function Navbar() {
         </ul>
         <Button />
         <div>
-          <span>{constants.userType[1]}</span>
-          <span>{}</span>
+         <div style={{display:"flex"}}>
+         <span>نوع ورود کاربر :</span>
+          <span style={{color:"white" , marginRight:"3px"}}>{constants.userType[2]}</span>
+          </div> 
+         <div style={{display:"flex"}}>
+         <span >واحد کاری:</span>
+          <span  style={{color:"white" , marginRight:"3px"}}>{constants.partitionName[2]}</span>
+          </div> 
+          
         </div>
       </nav>
     </>
