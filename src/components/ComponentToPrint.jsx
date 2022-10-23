@@ -63,18 +63,15 @@ const  ComponentToPrint =React.forwardRef ((props ,ref) => {
             <td rowSpan={2} style={{width:"30px"}}>ترتیب عملیات</td>
             <td rowSpan={2}>نام عملیات</td>
             <td rowSpan={2}>نام ایستگاه</td>
-            <td  colSpan={2}>مشخصات ماده اولیه</td>
+            <td colSpan={2}>مشخصات ماده اولیه</td>
             <td rowSpan={2}>مشخصه کنترلی</td>
             <td rowSpan={2}>معیار پذیرش</td>
             <td rowSpan={2}>مقدار اندازه گیری شده</td>
             <td rowSpan={2}>زمان شروع</td>
             <td rowSpan={2}>زمان پایان</td>
             <td colSpan={2}>نتیجه</td>
-            <td rowSpan={2}>نام اپراتور تولید</td>
-          
-          
-          
-          </tr>
+            <td rowSpan={2}>نام اپراتور تولید</td>      
+           </tr>
           <tr>
             <td style={{width:"50px"}} >نام ماده</td>
             <td style={{width:"50px"}}>کد شناسایی انبار</td>

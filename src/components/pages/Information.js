@@ -93,7 +93,7 @@ export default function Information() {
  }
   
   const ProductDispatcher = useProductActions()
-  console.log("productttttttttttttttttttttttttttttttttttt ,, " , product);
+  console.log("productttttttttttttttttttttttttttttttttttt", product);
 
   const validationForm = Yup.object().shape({
     productName: Yup.string().required(" کد مشخصه کنترلی جدید  را وارد کنید"),
@@ -184,7 +184,7 @@ export default function Information() {
                   <TextField
                     id="productName"
                     name="productName"
-                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
+                    disabled={localStorage.getItem("accessLevel") === 2 ?  false : true }
                     value={formik.values.productName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
@@ -298,7 +298,7 @@ export default function Information() {
 
                   <Select
                     className={styles.select}
-                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
+                    disabled={localStorage.getItem("accessLevel") === 2 ?  false : true }
                     id="produtionType"
                     name="produtionType"
                     value={parseInt(formik.values.produtionType)}
@@ -333,7 +333,7 @@ export default function Information() {
                   <TextField
                     id="customerName"
                     name="customerName"
-                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
+                    disabled={localStorage.getItem("accessLevel") === 2 ?  false : true }
                     value={formik.values.customerName}
                     onChange={formik.handleChange}
                     style={{ margin: 8 }}
@@ -358,7 +358,7 @@ export default function Information() {
                   <span className={styles.titleInput}>تاریخ ابلاغ تولید</span>
                   <DatePicker
                     className={styles.dataPicker}
-                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
+                    disabled={localStorage.getItem("accessLevel") === 2 ?  false : true }
                     type="date"
                     id="sayDate"
                     name="sayDate"
@@ -384,7 +384,7 @@ export default function Information() {
                     className={styles.dataPicker}
                     id="startDate"
                     name="startDate"
-                    disabled={localStorage.getItem("accessLevel") == 2 ?  false : true }
+                    disabled={localStorage.getItem("accessLevel") === 2 ?  false : true }
                     value={formik.values.startDate}
                     onChange={formik.handleChange}
                     placeholder="انتخاب تاریخ"
@@ -401,7 +401,7 @@ export default function Information() {
                   />
                 </Grid>
                 <Grid className={styles.holder} item md={4} xs={12} sm={6}>
-               {product ?  <Button disabled={localStorage.getItem("accessLevel") == 2 ?  false : true 
+               {product ?  <Button disabled={localStorage.getItem("accessLevel") === 2 ?  false : true 
               } type="submit" onClick={(e)=>handleClickEditProduct(e,formik.values)} variant="contained" color="primary">
                  ویرایش
                 </Button>: <Button   type="submit" variant="contained" color="primary">
